@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import '../../style/forms/QuizForm.scss';
 
-const QuizForm = ({ types, categoryId, onSubmit }) => {
+const QuizEditForm = ({ 
+  quiz, 
+  types, 
+  categoryId, 
+  onSubmit, 
+  onCancel 
+}) => {
   const [formData, setFormData] = useState({
     categoryId,
     type: "",
@@ -12,9 +18,22 @@ const QuizForm = ({ types, categoryId, onSubmit }) => {
     hint: "",
   });
 
+  useEffect(() => {
+    if (quiz) {
+      setFormData({
+        categoryId: quiz.categoryId || categoryId,
+        type: quiz.type || "",
+        question: quiz.question || "",
+        answer: quiz.answer || "",
+        mediaUrl: quiz.mediaUrl || "",
+        points: quiz.points || "",
+        hint: quiz.hint || "",
+      });
+    }
+  }, [quiz, categoryId]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({
       ...prev,
       [name]: name === "points" ? parseFloat(value) : value,
@@ -23,7 +42,10 @@ const QuizForm = ({ types, categoryId, onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit({
+      ...formData,
+      id: quiz.id
+    });
   };
 
   return (
@@ -32,7 +54,6 @@ const QuizForm = ({ types, categoryId, onSubmit }) => {
         Type:
         <select
           name="type"
-          className="typeSelector"
           value={formData.type}
           onChange={handleChange}
           required
@@ -72,6 +93,7 @@ const QuizForm = ({ types, categoryId, onSubmit }) => {
           name="mediaUrl"
           value={formData.mediaUrl}
           onChange={handleChange}
+          placeholder="https://example.com/image.jpg"
         />
       </label>
 
@@ -80,7 +102,8 @@ const QuizForm = ({ types, categoryId, onSubmit }) => {
         <input
           type="number"
           name="points"
-          step="0.1"
+          min="0"
+          step="0.5"
           value={formData.points}
           onChange={handleChange}
           required
@@ -94,12 +117,24 @@ const QuizForm = ({ types, categoryId, onSubmit }) => {
           name="hint"
           value={formData.hint}
           onChange={handleChange}
+          placeholder="Optional hint for players"
         />
       </label>
 
-      <button type="submit">Submit Quiz</button>
+      <div className="form-actions">
+        <button type="submit" className="submit-btn">
+          Update Quiz
+        </button>
+        <button 
+          type="button" 
+          className="cancel-btn"
+          onClick={onCancel}
+        >
+          Cancel
+        </button>
+      </div>
     </form>
   );
 };
 
-export default QuizForm;
+export default QuizEditForm;

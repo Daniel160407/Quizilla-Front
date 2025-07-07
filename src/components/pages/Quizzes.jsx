@@ -4,13 +4,14 @@ import useAxios from "../hooks/UseAxios";
 import QuizList from "../lists/QuizList";
 import AddQuizBtn from "../uiComponents/AddQuizBtn";
 import QuizForm from "../forms/QuizForm";
+import "../../style/pages/Quizzes.scss";
 
 const Quizzes = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [showForm, setShowForm] = useState(false);
+  const [showFormForCategory, setShowFormForCategory] = useState(null);
   const [types, setTypes] = useState([]);
 
   useEffect(() => {
@@ -19,7 +20,7 @@ const Quizzes = () => {
         setLoading(true);
         const response = await useAxios("/quiz", "get");
         setQuizzes(response.data);
-        
+
         const uniqueTypes = [
           ...new Set(response.data.map((quiz) => quiz.type)),
         ];
@@ -54,16 +55,26 @@ const Quizzes = () => {
         setTypes((prevTypes) => [...prevTypes, response.data.type]);
       }
 
-      setShowForm(false);
+      setShowFormForCategory(null);
     } catch (err) {
       setError(err.message || "Failed to create quiz");
     }
   };
 
+  const handleEdit = async (data) => {
+    const response = await useAxios("/quiz", "put", data);
+    setQuizzes(response.data);
+  };
+
+  const handleDelete = async (id) => {
+    const response = await useAxios(`/quiz?id=${id}`, 'delete');
+    setQuizzes(response.data);
+  };
+
   return (
     <>
       <Navbar />
-      <div className="dashboard">
+      <div className="quizzes">
         {error && <p className="error">{error}</p>}
         {loading ? (
           <p>Loading...</p>
@@ -75,13 +86,20 @@ const Quizzes = () => {
             return (
               <div key={category.id} className="category">
                 <h2>{category.name}</h2>
-                <QuizList quizzes={categoryQuizzes} />
-                <AddQuizBtn onClick={() => setShowForm(true)} />
-                {showForm === true && (
+                <QuizList
+                  quizzes={categoryQuizzes}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+                <AddQuizBtn
+                  onClick={() => setShowFormForCategory(category.id)}
+                />
+                {showFormForCategory === category.id && (
                   <QuizForm
                     types={types}
                     categoryId={category.id}
                     onSubmit={handleSubmit}
+                    onCancel={() => setShowFormForCategory(null)}
                   />
                 )}
               </div>

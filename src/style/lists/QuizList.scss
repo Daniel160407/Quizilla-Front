@@ -1,0 +1,81 @@
+.quiz-list {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  padding: 1rem 0;
+
+  // Kahoot-inspired color palette
+  $quiz-colors: #7b1fa2, #1976d2, #388e3c, #f57c00, #c2185b, #d32f2f, #00796b;
+  $total-colors: length($quiz-colors);
+
+  > div {
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    animation: slideIn 0.4s ease-out;
+    animation-delay: calc(var(--index) * 0.1s);
+    opacity: 0;
+    animation-fill-mode: forwards;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    border: none;
+
+    &:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      filter: brightness(1.05);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    // Optional white fade overlay on hover
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0);
+      transition: background 0.3s ease;
+      pointer-events: none;
+    }
+
+    &:hover::after {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  // Color assignment with looping pattern
+  @for $i from 1 through 100 {
+    > div:nth-child(#{$i}) {
+      background: nth($quiz-colors, ($i - 1) % $total-colors + 1);
+
+      // Optional: Darker bottom border
+      border-bottom: 4px
+        solid
+        darken(nth($quiz-colors, ($i - 1) % $total-colors + 1), 10%);
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

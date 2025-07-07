@@ -1,0 +1,90 @@
+.category-form {
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  animation: formAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  label {
+    display: block;
+    margin-bottom: 1.5rem;
+    font-family: "Arial Rounded MT Bold", sans-serif;
+    font-size: 1.2rem;
+    color: #461a8f;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  input {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    border: 3px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    &:focus {
+      outline: none;
+      border-color: #7b1fa2;
+      box-shadow: 0 0 0 3px rgba(123, 31, 162, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      transform: scale(1.01);
+    }
+
+    &::placeholder {
+      color: #b0b0b0;
+      font-style: italic;
+    }
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(45deg, #7b1fa2, #9c27b0);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 8px rgba(123, 31, 162, 0.3), 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 12px rgba(123, 31, 162, 0.4),
+        0 3px 6px rgba(0, 0, 0, 0.15);
+      background: linear-gradient(45deg, #9c27b0, #7b1fa2);
+    }
+
+    &:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 4px rgba(123, 31, 162, 0.3);
+    }
+
+    &:disabled {
+      background: #e0e0e0;
+      color: #a0a0a0;
+      transform: none;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+  }
+
+  @keyframes formAppear {
+    0% {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}

@@ -1,0 +1,91 @@
+$dark-bg: #1a1a2e;
+$dark-card: #253a75;
+$dark-accent: #0f3460;
+$purple-main: #7b1fa2;
+$purple-light: #9c27b0;
+$text-light: #e6e6e6;
+$text-muted: #b8b8b8;
+$highlight: #00b4d8;
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.dashboard-quiz {
+  background: $dark-card;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.4s ease-out both;
+  animation-delay: calc(var(--index) * 0.05s + 0.3s);
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background: linear-gradient(to bottom, $purple-main, $purple-light);
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+      0 6px 12px rgba(0, 0, 0, 0.4),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    background: lighten($dark-card, 5%);
+    
+    p {
+      color: $text-light;
+      
+      &::before {
+        color: $highlight;
+      }
+    }
+  }
+
+  p {
+    color: #f4f4f4;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 0;
+    position: relative;
+    padding-left: 1.8rem;
+    transition: color 0.3s ease;
+
+    &::before {
+      content: '●';
+      position: absolute;
+      left: 0;
+      color: $purple-main;
+      transition: color 0.3s ease;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-quiz {
+    padding: 0.8rem 1.25rem;
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+}

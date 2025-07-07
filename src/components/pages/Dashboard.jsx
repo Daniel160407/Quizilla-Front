@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "../navigation/Navbar";
 import useAxios from "../hooks/UseAxios";
-import "../../style/Dashboard.scss";
-import QuizList from "../lists/QuizList";
+import "../../style/pages/Dashboard.scss";
+import DashboardQuizList from "../lists/DashboardQuizList";
 
 const Dashboard = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -51,7 +51,7 @@ const Dashboard = () => {
             return (
               <div key={category.id} className="category">
                 <h2>{category.name}</h2>
-                <QuizList quizzes={categoryQuizzes} />
+                <DashboardQuizList quizzes={categoryQuizzes} />
               </div>
             );
           })

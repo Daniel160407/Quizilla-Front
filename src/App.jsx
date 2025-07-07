@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AdminPanel from "./components/pages/AdminPanel";
 import Dashboard from "./components/pages/Dashboard";
 import Categories from "./components/pages/Categories";
 import Quizzes from "./components/pages/Quizzes";

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DashboardQuiz from "../model/DashboardQuiz";
 import "../../style/lists/DashboardQuizList.scss";
 
-const DashboardQuizList = ({ quizzes }) => {
+const DashboardQuizList = ({ quizzes, onQuizClick }) => {
   const [types, setTypes] = useState([]);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const DashboardQuizList = ({ quizzes }) => {
             {quizzes
               .filter((quiz) => quiz.type === type)
               .map((quiz, index) => (
-                <DashboardQuiz quiz={quiz} index={index} />
+                <DashboardQuiz key={index} quiz={quiz} index={index} onClick={onQuizClick} />
               ))}
           </div>
         </div>

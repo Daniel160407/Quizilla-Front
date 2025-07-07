@@ -1,4 +1,9 @@
 $kahoot-colors: #461a8f, #7b1fa2, #1976d2, #388e3c, #f57c00, #c2185b, #d32f2f, #00796b;
+$white: #ffffff;
+$black: #000000;
+$error-red: #d32f2f;
+$text-light: #f4f4f4;
+$projector-purple: #9c27b0;
 
 .dashboard {
   display: grid;
@@ -6,23 +11,64 @@ $kahoot-colors: #461a8f, #7b1fa2, #1976d2, #388e3c, #f57c00, #c2185b, #d32f2f, #
   gap: 1.5rem;
   padding: 2rem;
   margin-top: 50px;
-  background: linear-gradient(135deg, darken(#461a8f, 10%) 0%, #2d075a 100%);
+  background: linear-gradient(135deg, darken(nth($kahoot-colors, 1), 10%) 0%, #2d075a 100%);
   min-height: 100vh;
   font-family: "Arial Rounded MT Bold", "Segoe UI", sans-serif;
   animation: fadeIn 0.5s ease-out forwards;
+  position: relative;
+
+  .projector-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, $projector-purple 0%, nth($kahoot-colors, 2) 100%);
+    color: $white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba($black, 0.2);
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid rgba($white, 0.2);
+    
+    &:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba($black, 0.3);
+      background: linear-gradient(135deg, lighten($projector-purple, 5%) 0%, lighten(nth($kahoot-colors, 2), 5%) 100%);
+    }
+    
+    &:active {
+      transform: translateY(0) scale(0.98);
+    }
+    
+    .projector-icon {
+      font-size: 1.4rem;
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover .projector-icon {
+      transform: rotate(15deg);
+    }
+  }
 
   .error {
     grid-column: 1 / -1;
-    background: rgba(255, 255, 255, 0.9);
-    color: #d32f2f;
+    background: rgba($white, 0.9);
+    color: $error-red;
     padding: 1.2rem;
     border-radius: 12px;
     text-align: center;
     font-weight: 700;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    border-left: 6px solid #d32f2f;
+    box-shadow: 0 4px 15px rgba($black, 0.15);
+    border-left: 6px solid $error-red;
     margin-bottom: 1rem;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    text-shadow: 0 1px 2px rgba($black, 0.1);
   }
 
   .category {
@@ -34,7 +80,7 @@ $kahoot-colors: #461a8f, #7b1fa2, #1976d2, #388e3c, #f57c00, #c2185b, #d32f2f, #
     padding: 20px;
     transform: scale(1);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 10px 20px rgba($black, 0.19), 0 6px 6px rgba($black, 0.23);
     animation: cardAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 
     @for $i from 1 through length($kahoot-colors) {
@@ -45,17 +91,18 @@ $kahoot-colors: #461a8f, #7b1fa2, #1976d2, #388e3c, #f57c00, #c2185b, #d32f2f, #
 
     h2 {
       text-align: center;
-      color: #f4f4f4;
+      color: $text-light;
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 2px 8px rgba($black, 0.4);
+      transition: transform 0.3s ease;
     }
 
     &:hover {
       transform: scale(1.05);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-
-      .category-content::before {
-        opacity: 0.3;
-      }
-
+      box-shadow: 0 15px 30px rgba($black, 0.25), 0 10px 10px rgba($black, 0.22);
+      
       h2 {
         transform: translateY(-5px);
       }
@@ -68,64 +115,14 @@ $kahoot-colors: #461a8f, #7b1fa2, #1976d2, #388e3c, #f57c00, #c2185b, #d32f2f, #
     }
   }
 
-  .category-content {
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 1.5rem;
-    color: white;
-    text-align: center;
-    z-index: 2;
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(
-        circle at center,
-        rgba(255, 255, 255, 0.2) 0%,
-        rgba(255, 255, 255, 0) 70%
-      );
-      opacity: 0.15;
-      transition: opacity 0.3s ease;
-      z-index: -1;
-    }
-  }
-
-  h2 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    margin-bottom: 0.5rem;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    letter-spacing: -0.5px;
-    transform: translateY(0);
-    transition: transform 0.3s ease;
-  }
-
-  .quiz-count {
-    font-size: 1.2rem;
-    font-weight: 700;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 0.3rem 1rem;
-    border-radius: 20px;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(4px);
-  }
-
   > p {
     grid-column: 1 / -1;
     text-align: center;
-    color: white;
+    color: $white;
     font-size: 1.5rem;
     font-weight: 700;
     margin-top: 2rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 4px rgba($black, 0.3);
   }
 }
 
@@ -153,9 +150,26 @@ $kahoot-colors: #461a8f, #7b1fa2, #1976d2, #388e3c, #f57c00, #c2185b, #d32f2f, #
   .dashboard {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     padding: 1.5rem;
+    margin-top: 20px;
 
-    h2 {
-      font-size: 1.8rem;
+    .projector-button {
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 18px;
+      font-size: 1rem;
+      
+      .projector-icon {
+        font-size: 1.2rem;
+      }
+    }
+
+    .category {
+      min-height: 350px;
+      padding: 15px;
+      
+      h2 {
+        font-size: 1.8rem;
+      }
     }
   }
 }

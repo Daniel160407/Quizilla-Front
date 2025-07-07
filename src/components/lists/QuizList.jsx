@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import Quiz from "../model/Quiz";
+import "../../style/lists/QuizList.scss";
+import useAxios from "../hooks/UseAxios";
 
-const QuizList = ({ quizzes }) => {
+const QuizList = ({ quizzes, onEdit, onDelete }) => {
   const [types, setTypes] = useState([]);
 
   useEffect(() => {
@@ -10,14 +12,21 @@ const QuizList = ({ quizzes }) => {
   }, [quizzes]);
 
   return (
-    <div className="quizzes">
-      {types.map((type) => (
-        <div key={type} className={type}>
+    <div className="quiz-list">
+      {types.map((type, index) => (
+        <div key={type} className={type} style={{ "--index": index }}>
           <h1>{type}</h1>
           {quizzes
             .filter((quiz) => quiz.type === type)
-            .map((quiz) => (
-              <Quiz key={quiz.id} quiz={quiz} />
+            .map((quiz, index) => (
+              <Quiz
+                key={quiz.id}
+                quiz={quiz}
+                index={index}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                types={types}
+              />
             ))}
         </div>
       ))}

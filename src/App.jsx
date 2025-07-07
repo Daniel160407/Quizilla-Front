@@ -1,15 +1,16 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import AdminPanel from "./pages/AdminPanel";
-import Projector from "./pages/Projector";
+import AdminPanel from "./components/pages/AdminPanel";
+import Dashboard from "./components/pages/Dashboard";
+import Categories from "./components/pages/Categories";
+import Quizzes from "./components/pages/Quizzes";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/adminpanel" element={<AdminPanel />} />
-        <Route path="/projector" element={<Projector />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/quizzes" element={<Quizzes />} />
       </Routes>
     </Router>
   );

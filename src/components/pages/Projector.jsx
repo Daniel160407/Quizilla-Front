@@ -1,24 +1,34 @@
 import { useEffect, useState } from "react";
-import Navbar from "../navigation/Navbar";
 import useAxios from "../hooks/UseAxios";
-import "../../style/pages/Dashboard.scss";
-import DashboardQuizList from "../lists/DashboardQuizList";
-import Question from "../model/Question";
-import { FaDesktop } from "react-icons/fa";
+import "../../style/pages/Projector.scss";
+import ProjectorQuizList from "../lists/ProjectorQuizList";
+import ProjectorQuestion from "../model/ProjectorQuestion";
 
-const Dashboard = () => {
+const Projector = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showQuestion, setShowQuestion] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState({});
-  const [projectorWindow, setProjectorWindow] = useState(null);
   const [broadcastChannel, setBroadcastChannel] = useState(null);
 
   useEffect(() => {
     const channel = new BroadcastChannel("quiz_channel");
     setBroadcastChannel(channel);
+
+    channel.onmessage = (event) => {
+      switch (event.data.type) {
+        case "QUIZ_SELECTED":
+          setSelectedQuiz(event.data.payload);
+          setShowQuestion(true);
+          break;
+        case "QUIZ_CENCELED":
+          selectedQuiz.enabled = 1;
+          setShowQuestion(false);
+          break;
+      }
+    };
 
     return () => {
       channel.close();
@@ -53,59 +63,12 @@ const Dashboard = () => {
     }
   }, [showQuestion]);
 
-  const handleQuizClick = (quiz) => {
-    setSelectedQuiz(quiz);
-    setShowQuestion(true);
-    useAxios(`/quiz/enable?id=${quiz.id}&enable=${false}`, "put");
-
-    if (broadcastChannel) {
-      broadcastChannel.postMessage({
-        type: "QUIZ_SELECTED",
-        payload: quiz,
-      });
-    }
-  };
-
-  const handleBackToDashboard = () => {
-    setShowQuestion(false);
-    setTimeout(() => {
-        broadcastChannel.postMessage({
-          type: "QUIZ_CENCELED",
-          payload: selectedQuiz,
-        });
-      }, 1000);
-  };
-
-  const openProjector = () => {
-    const win = window.open("/projector", "_blank", "width=1200,height=800");
-    setProjectorWindow(win);
-
-    if (selectedQuiz && Object.keys(selectedQuiz).length > 0) {
-      setTimeout(() => {
-        broadcastChannel.postMessage({
-          type: "QUIZ_SELECTED",
-          payload: selectedQuiz,
-        });
-      }, 1000);
-    }
-  };
-
   return (
     <>
-      <Navbar />
       {showQuestion ? (
-        <Question quiz={selectedQuiz} onBack={handleBackToDashboard} />
+        <ProjectorQuestion quiz={selectedQuiz} />
       ) : (
         <div className="dashboard">
-          <button
-            className="projector-button"
-            onClick={openProjector}
-            title="Open Projector View"
-          >
-            <FaDesktop className="projector-icon" />
-            <span>Projector View</span>
-          </button>
-
           {error && <p className="error">{error}</p>}
           {loading ? (
             <p>Loading...</p>
@@ -117,10 +80,7 @@ const Dashboard = () => {
               return (
                 <div key={category.id} className="category">
                   <h2>{category.name}</h2>
-                  <DashboardQuizList
-                    quizzes={categoryQuizzes}
-                    onQuizClick={handleQuizClick}
-                  />
+                  <ProjectorQuizList quizzes={categoryQuizzes} />
                 </div>
               );
             })
@@ -131,4 +91,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Projector;

@@ -1,0 +1,487 @@
+$kahoot-red: #e21b3c;
+$kahoot-blue: #1368ce;
+$kahoot-green: #26890c;
+$kahoot-yellow: #ffd000;
+$kahoot-purple: #7b1fa2;
+$text-dark: #333333;
+$correct-highlight: #4caf50;
+$white: #ffffff;
+$black: #000000;
+$shadow-color: rgba(0, 0, 0, 0.2);
+
+.kahoot-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $kahoot-purple;
+  z-index: 1000;
+  animation: fadeOut 0.5s 2s forwards;
+
+  .loading-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    transform: scale(1.2);
+
+    .logo-circle {
+      width: 120px;
+      height: 120px;
+      background: $white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: pulse 1s infinite alternate;
+      box-shadow: 0 0 0 10px rgba($white, 0.2), 0 0 0 20px rgba($white, 0.1);
+
+      img {
+        width: 80%;
+        height: auto;
+      }
+    }
+
+    .logo-text {
+      color: $white;
+      font-size: 3rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-family: "Arial Rounded MT Bold", "Segoe UI", sans-serif;
+      text-shadow: 0 2px 4px rgba($black, 0.3);
+      animation: bounce 0.8s infinite alternate;
+    }
+  }
+}
+
+.projector-question {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: $white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba($kahoot-purple, 0.1);
+  animation: fadeIn 0.5s ease-out;
+
+  h1 {
+    color: $kahoot-purple;
+    font-size: 3rem;
+    margin-bottom: 3rem;
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    line-height: 1.3;
+    padding: 0 1rem;
+  }
+
+  .projector-answers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+
+    .projector-answer-option {
+      border-radius: 16px;
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      color: $white;
+      font-weight: 700;
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 6px 12px $shadow-color;
+      min-height: 120px;
+      position: relative;
+      overflow: hidden;
+      border: none;
+      text-align: left;
+
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 70px;
+        height: 70px;
+        background: rgba($white, 0.9);
+        border-radius: 50%;
+        margin-right: 1.5rem;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        color: $text-dark;
+        font-size: 2rem;
+        font-family: "Arial", sans-serif;
+      }
+
+      &:nth-child(1)::before {
+        content: "1";
+      }
+      &:nth-child(2)::before {
+        content: "2";
+      }
+      &:nth-child(3)::before {
+        content: "3";
+      }
+      &:nth-child(4)::before {
+        content: "4";
+      }
+
+      &:nth-child(1) {
+        background: $kahoot-red;
+      }
+      &:nth-child(2) {
+        background: $kahoot-blue;
+      }
+      &:nth-child(3) {
+        background: $kahoot-green;
+      }
+      &:nth-child(4) {
+        background: $kahoot-yellow;
+        color: $text-dark;
+      }
+
+      &:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 10px 20px $shadow-color;
+      }
+
+      &.show-result {
+        opacity: 0.7;
+        transform: scale(0.98);
+        transition: all 0.3s ease;
+
+        &:not(.projector-correct-answer) {
+          filter: grayscale(80%);
+        }
+
+        &.projector-correct-answer {
+          opacity: 1;
+          transform: scale(1.05);
+          box-shadow: 0 8px 24px rgba($correct-highlight, 0.3);
+          animation: correctAnswerReveal 0.5s ease-out;
+        }
+      }
+
+      .result-indicator {
+        position: absolute;
+        top: 50%;
+        right: 2rem;
+        transform: translateY(-50%);
+        font-size: 3rem;
+        font-weight: bold;
+        opacity: 0;
+        animation: fadeInIndicator 0.5s 0.3s forwards;
+      }
+    }
+  }
+}
+
+.timer-container {
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+
+  .timer-circle {
+    width: 100%;
+    height: 100%;
+    background: $kahoot-purple;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba($black, 0.2);
+    border: 6px solid $white;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba($black, 0.1);
+      border-radius: 50%;
+    }
+
+    .timer-text {
+      color: $white;
+      font-size: 3.5rem;
+      font-weight: 800;
+      z-index: 1;
+      text-shadow: 0 2px 4px rgba($black, 0.3);
+    }
+  }
+}
+
+.question-intro {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $kahoot-blue;
+  z-index: 1000;
+  animation: fadeOut 0.5s 3s forwards;
+
+  .question-intro-content {
+    text-align: center;
+    padding: 2rem;
+    max-width: 90%;
+
+    h1 {
+      color: $white;
+      font-size: 4rem;
+      font-weight: 800;
+      text-shadow: 0 4px 8px rgba($black, 0.3);
+      line-height: 1.2;
+      margin: 0;
+      animation: pulse 1s infinite alternate;
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba($white, 0.2), 0 0 0 20px rgba($white, 0.1);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 15px rgba($white, 0.2), 0 0 0 30px rgba($white, 0.1);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba($white, 0.2), 0 0 0 20px rgba($white, 0.1);
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-15px) scale(1.05);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes answerPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes correctAnswerReveal {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes fadeInIndicator {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+@media (max-width: 1024px) {
+  .projector-question {
+    max-width: 800px;
+
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    .projector-answers-grid {
+      .projector-answer-option {
+        padding: 1.5rem;
+        min-height: 100px;
+        font-size: 1.5rem;
+
+        &::before {
+          width: 60px;
+          height: 60px;
+          font-size: 1.8rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .kahoot-loading {
+    .loading-logo {
+      transform: scale(1);
+
+      .logo-circle {
+        width: 100px;
+        height: 100px;
+      }
+
+      .logo-text {
+        font-size: 2.5rem;
+      }
+    }
+  }
+
+  .projector-question {
+    padding: 2rem 1.5rem;
+    margin-top: 30px;
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .projector-answers-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+
+      .projector-answer-option {
+        padding: 1.5rem;
+        min-height: 90px;
+        font-size: 1.4rem;
+
+        &::before {
+          width: 50px;
+          height: 50px;
+          font-size: 1.5rem;
+          margin-right: 1rem;
+        }
+
+        &.projector-correct-answer {
+          &::after {
+            border-width: 0 40px 40px 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .kahoot-loading {
+    .loading-logo {
+      .logo-circle {
+        width: 80px;
+        height: 80px;
+      }
+
+      .logo-text {
+        font-size: 2rem;
+      }
+    }
+  }
+
+  .projector-question {
+    padding: 1.5rem 1rem;
+    margin-top: 20px;
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    .projector-answers-grid {
+      .projector-answer-option {
+        padding: 1.2rem;
+        min-height: 80px;
+        font-size: 1.2rem;
+
+        &::before {
+          width: 40px;
+          height: 40px;
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+
+  .timer-container {
+    width: 80px;
+    height: 80px;
+    top: -20px;
+    right: -20px;
+
+    .timer-circle {
+      .timer-text {
+        font-size: 2.5rem;
+      }
+    }
+  }
+}

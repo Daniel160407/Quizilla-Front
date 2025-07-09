@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import DashboardQuiz from "../model/DashboardQuiz";
 import "../../style/lists/DashboardQuizList.scss";
+import ProjectorQuiz from "../model/ProjectorQuiz";
 
-const DashboardQuizList = ({ quizzes, onQuizClick }) => {
+const ProjectorQuizList = ({ quizzes }) => {
   const [types, setTypes] = useState([]);
 
   useEffect(() => {
@@ -19,7 +20,7 @@ const DashboardQuizList = ({ quizzes, onQuizClick }) => {
             {quizzes
               .filter((quiz) => quiz.type === type)
               .map((quiz, index) => (
-                <DashboardQuiz key={index} quiz={quiz} index={index} onClick={onQuizClick} />
+                <ProjectorQuiz key={index} quiz={quiz} index={index} />
               ))}
           </div>
         </div>
@@ -28,4 +29,4 @@ const DashboardQuizList = ({ quizzes, onQuizClick }) => {
   );
 };
 
-export default DashboardQuizList;
+export default ProjectorQuizList;

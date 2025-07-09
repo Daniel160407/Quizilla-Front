@@ -10,52 +10,11 @@ $projector-purple: #9c27b0;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
   padding: 2rem;
-  margin-top: 50px;
   background: linear-gradient(135deg, darken(nth($kahoot-colors, 1), 10%) 0%, #2d075a 100%);
   min-height: 100vh;
   font-family: "Arial Rounded MT Bold", "Segoe UI", sans-serif;
   animation: fadeIn 0.5s ease-out forwards;
   position: relative;
-
-  .projector-button {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: linear-gradient(135deg, $projector-purple 0%, nth($kahoot-colors, 2) 100%);
-    color: $white;
-    border: none;
-    border-radius: 50px;
-    padding: 12px 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 6px 20px rgba($black, 0.2);
-    z-index: 1000;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 2px solid rgba($white, 0.2);
-    
-    &:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 8px 25px rgba($black, 0.3);
-      background: linear-gradient(135deg, lighten($projector-purple, 5%) 0%, lighten(nth($kahoot-colors, 2), 5%) 100%);
-    }
-    
-    &:active {
-      transform: translateY(0) scale(0.98);
-    }
-    
-    .projector-icon {
-      font-size: 1.4rem;
-      transition: transform 0.3s ease;
-    }
-    
-    &:hover .projector-icon {
-      transform: rotate(15deg);
-    }
-  }
 
   .error {
     grid-column: 1 / -1;
@@ -151,17 +110,6 @@ $projector-purple: #9c27b0;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     padding: 1.5rem;
     margin-top: 20px;
-
-    .projector-button {
-      bottom: 20px;
-      right: 20px;
-      padding: 10px 18px;
-      font-size: 1rem;
-      
-      .projector-icon {
-        font-size: 1.2rem;
-      }
-    }
 
     .category {
       min-height: 350px;

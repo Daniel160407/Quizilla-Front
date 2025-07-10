@@ -8,11 +8,14 @@ import countdown20v2 from "/sounds/countdown20v2.mp3";
 import countdown10v1 from "/sounds/countdown10v1.mp3";
 import countdown10v2 from "/sounds/countdown10v2.mp3";
 import answerSound from "/sounds/answer.mp3";
+import PlayerBox from "../uiComponents/PlayerBox";
 
-const ProjectorQuestion = ({ quiz }) => {
+const ProjectorQuestion = ({ quiz, playersAnswered, onTimeUp }) => {
   const [answers, setAnswers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [timeLeft, setTimeLeft] = useState(quiz.type === "A" ? 30 : quiz.type === "B" ? 20 : 10);
+  const [timeLeft, setTimeLeft] = useState(
+    quiz.type === "A" ? 30 : quiz.type === "B" ? 20 : 10
+  );
   const [showResults, setShowResults] = useState(false);
   const [showQuestionIntro, setShowQuestionIntro] = useState(true);
   const countdownAudioRef = useRef(null);
@@ -20,20 +23,20 @@ const ProjectorQuestion = ({ quiz }) => {
   const [selectedVersion, setSelectedVersion] = useState(null);
 
   useEffect(() => {
-    setSelectedVersion(Math.random() < 0.5 ? 'v1' : 'v2');
+    setSelectedVersion(Math.random() < 0.5 ? "v1" : "v2");
   }, []);
 
   const getSoundFile = () => {
     if (!selectedVersion) return countdown30v1;
-    
-    switch(quiz.type) {
-      case 'A': 
-        return selectedVersion === 'v1' ? countdown30v1 : countdown30v2;
-      case 'B': 
-        return selectedVersion === 'v1' ? countdown20v1 : countdown20v2;
-      case 'C': 
-        return selectedVersion === 'v1' ? countdown10v1 : countdown10v2;
-      default: 
+
+    switch (quiz.type) {
+      case "A":
+        return selectedVersion === "v1" ? countdown30v1 : countdown30v2;
+      case "B":
+        return selectedVersion === "v1" ? countdown20v1 : countdown20v2;
+      case "C":
+        return selectedVersion === "v1" ? countdown10v1 : countdown10v2;
+      default:
         return countdown30v1;
     }
   };
@@ -74,7 +77,7 @@ const ProjectorQuestion = ({ quiz }) => {
   useEffect(() => {
     if (countdownAudioRef.current && !showQuestionIntro) {
       if (!isLoading && !showResults) {
-        countdownAudioRef.current.play().catch(e => {
+        countdownAudioRef.current.play().catch((e) => {
           console.log("Countdown audio play failed:", e);
         });
       } else {
@@ -92,11 +95,13 @@ const ProjectorQuestion = ({ quiz }) => {
         countdownAudioRef.current.pause();
         countdownAudioRef.current.currentTime = 0;
       }
-      
+
       answerAudioRef.current.currentTime = 0;
-      answerAudioRef.current.play().catch(e => {
+      answerAudioRef.current.play().catch((e) => {
         console.log("Answer audio play failed:", e);
       });
+
+      onTimeUp();
     }
   }, [showResults]);
 
@@ -151,36 +156,49 @@ const ProjectorQuestion = ({ quiz }) => {
   }
 
   return (
-    <div className="projector-question">
-      {!showResults && (
-        <div className="timer-container">
-          <div className="timer-circle">
-            <span className="timer-text">{timeLeft}</span>
-          </div>
-        </div>
-      )}
-
-      <h1>{quiz.question}</h1>
-      <div className="projector-answers-grid">
-        {answers.map((answer, index) => {
-          const correct = isCorrectAnswer(answer);
-          const cleanedAnswer = cleanAnswerText(answer);
-
-          return (
-            <div
-              key={index}
-              className={`projector-answer-option ${
-                correct ? "projector-correct-answer" : ""
-              } ${showResults ? "show-result" : ""}`}
-              data-correct={correct}
-            >
-              {cleanedAnswer}
-              {showResults && (
-                <span className="result-indicator">{correct ? "✓" : "✗"}</span>
-              )}
+    <div className="projector-question-container">
+      <div className="projector-question">
+        {!showResults && (
+          <div className="timer-container">
+            <div className="timer-circle">
+              <span className="timer-text">{timeLeft}</span>
             </div>
-          );
-        })}
+          </div>
+        )}
+
+        <h1>{quiz.question}</h1>
+        <div className="projector-answers-grid">
+          {answers.map((answer, index) => {
+            const correct = isCorrectAnswer(answer);
+            const cleanedAnswer = cleanAnswerText(answer);
+
+            return (
+              <div
+                key={index}
+                className={`projector-answer-option ${
+                  correct ? "projector-correct-answer" : ""
+                } ${showResults ? "show-result" : ""}`}
+                data-correct={correct}
+              >
+                {cleanedAnswer}
+                {showResults && (
+                  <span className="result-indicator">
+                    {correct ? "✓" : "✗"}
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="players-answered-sidebar">
+        <h3>Players Answered: {playersAnswered.length}</h3>
+        <div className="players-list">
+          {playersAnswered.map((player, index) => (
+            <PlayerBox key={index} player={player} />
+          ))}
+        </div>
       </div>
     </div>
   );

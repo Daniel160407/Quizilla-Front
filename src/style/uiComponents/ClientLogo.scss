@@ -1,0 +1,110 @@
+$kahoot-dark-bg: #1a1a2e;
+$kahoot-darker-bg: #16213e;
+$kahoot-purple: #7b1fa2;
+$kahoot-bright-purple: #9c27b0;
+$kahoot-yellow: #ffd000;
+$text-light: #f8f9fa;
+
+.client-logo {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  position: relative;
+  animation: logoEntrance 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+
+  img {
+    max-width: 300px;
+    height: auto;
+  border-radius: 50%;
+
+    filter: drop-shadow(0 4px 12px rgba($kahoot-purple, 0.4));
+    transition: all 0.5s ease;
+    
+    &:hover {
+      filter: 
+        drop-shadow(0 6px 16px rgba($kahoot-purple, 0.6))
+        brightness(1.05);
+      transform: scale(1.02);
+    }
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, $kahoot-yellow, transparent);
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.7;
+  }
+
+  &::before {
+    left: -80px;
+  }
+
+  &::after {
+    right: -80px;
+  }
+}
+
+@keyframes logoEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes logoPulse {
+  0% {
+    filter: drop-shadow(0 4px 12px rgba($kahoot-purple, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 6px 20px rgba($kahoot-bright-purple, 0.7));
+  }
+  100% {
+    filter: drop-shadow(0 4px 12px rgba($kahoot-purple, 0.4));
+  }
+}
+
+@media (max-width: 768px) {
+  .client-logo {
+    margin-bottom: 1.8rem;
+    
+    img {
+      max-width: 240px;
+    }
+
+    &::before,
+    &::after {
+      width: 40px;
+    }
+
+    &::before {
+      left: -60px;
+    }
+
+    &::after {
+      right: -60px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .client-logo {
+    margin-bottom: 1.2rem;
+    
+    img {
+      max-width: 200px;
+    }
+
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+}

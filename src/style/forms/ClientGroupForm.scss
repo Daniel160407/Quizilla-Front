@@ -1,0 +1,173 @@
+$kahoot-dark-bg: #1a1a2e;
+$kahoot-darker-bg: #16213e;
+$kahoot-purple: #7b1fa2;
+$kahoot-bright-purple: #9c27b0;
+$kahoot-yellow: #ffd000;
+$kahoot-dark-yellow: #ffc107;
+$text-light: #f8f9fa;
+$text-muted: #adb5bd;
+$shadow-dark: rgba(0, 0, 0, 0.4);
+
+.client-group-form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  text-align: center;
+  background: $kahoot-dark-bg;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba($kahoot-purple, 0.3);
+  animation: kahootFadeIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  label {
+    display: block;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: $text-light;
+    text-shadow: 0 2px 4px rgba(#000000, 0.3);
+    font-family: "Arial Rounded MT Bold", "Segoe UI", sans-serif;
+    letter-spacing: 0.5px;
+  }
+
+  input {
+    width: 100%;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $text-light;
+    background: $kahoot-darker-bg;
+    border: 3px solid $kahoot-purple;
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-align: center;
+    box-shadow: 0 4px 12px $shadow-dark;
+
+    &:focus {
+      background: lighten($kahoot-darker-bg, 5%);
+      border-color: $kahoot-bright-purple;
+      box-shadow: 0 0 0 4px rgba($kahoot-purple, 0.4);
+      transform: scale(1.02);
+    }
+
+    &::placeholder {
+      color: $text-muted;
+      font-weight: 500;
+    }
+  }
+
+  button {
+    width: 100%;
+    padding: 1.2rem;
+    background: $kahoot-yellow;
+    color: darken(#000000, 10%);
+    border: none;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 6px 12px $shadow-dark;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+      background: $kahoot-dark-yellow;
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: rotate(30deg);
+      transition: all 0.5s ease;
+    }
+
+    &:hover::after {
+      left: 100%;
+      top: 100%;
+    }
+  }
+}
+
+@keyframes kahootFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes purpleGlow {
+  0% { box-shadow: 0 0 5px rgba($kahoot-purple, 0.5); }
+  50% { box-shadow: 0 0 20px rgba($kahoot-purple, 0.8); }
+  100% { box-shadow: 0 0 5px rgba($kahoot-purple, 0.5); }
+}
+
+@media (max-width: 768px) {
+  .client-group-form {
+    padding: 1.8rem;
+    margin: 0 1rem;
+
+    label {
+      font-size: 1.5rem;
+    }
+
+    input {
+      font-size: 1.2rem;
+      padding: 1rem;
+    }
+
+    button {
+      font-size: 1.2rem;
+      padding: 1rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .client-group-form {
+    padding: 1.5rem;
+    border-radius: 12px;
+
+    label {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    input {
+      font-size: 1.1rem;
+      padding: 0.8rem;
+      margin-bottom: 1.5rem;
+      border-radius: 8px;
+    }
+
+    button {
+      font-size: 1.1rem;
+      padding: 0.8rem;
+      border-radius: 8px;
+    }
+  }
+}

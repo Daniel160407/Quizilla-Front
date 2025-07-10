@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FiMenu, FiX } from 'react-icons/fi';
-import '../../style/Navbar.scss';
+import '../../style/navigation/Navbar.scss';
 
 const Navbar = () => {
   const location = useLocation();
@@ -10,7 +10,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const navItems = [
-    { label: 'Dashboard', path: '/' },
+    { label: 'Dashboard', path: '/dashboard' },
     { label: 'Categories', path: '/categories' },
     { label: 'Quizzes', path: '/quizzes' },
     { label: 'Groups', path: '/groups' },

@@ -12,6 +12,7 @@ const Projector = () => {
   const [showQuestion, setShowQuestion] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState({});
   const [broadcastChannel, setBroadcastChannel] = useState(null);
+  const [playersAnswered, setPlayersAnswered] = useState([]);
 
   useEffect(() => {
     const channel = new BroadcastChannel("quiz_channel");
@@ -26,6 +27,9 @@ const Projector = () => {
         case "QUIZ_CENCELED":
           selectedQuiz.enabled = 1;
           setShowQuestion(false);
+          break;
+        case "PLAYER_ANSWERED":
+          setPlayersAnswered(prev => [...prev, event.data.payload]);
           break;
       }
     };
@@ -63,10 +67,19 @@ const Projector = () => {
     }
   }, [showQuestion]);
 
+  const handleTimeUp = () => {
+    setTimeout(() => {
+      broadcastChannel.postMessage({
+        type: "QUESTION_CANCEL",
+        payload: selectedQuiz,
+      });
+    }, 1000);
+  }
+
   return (
     <>
       {showQuestion ? (
-        <ProjectorQuestion quiz={selectedQuiz} />
+        <ProjectorQuestion quiz={selectedQuiz} playersAnswered={playersAnswered} onTimeUp={handleTimeUp} />
       ) : (
         <div className="dashboard">
           {error && <p className="error">{error}</p>}

@@ -1,0 +1,120 @@
+$kahoot-dark-bg: #1a1a2e;
+$kahoot-darker-bg: #16213e;
+$kahoot-purple: #7b1fa2;
+$kahoot-bright-purple: #9c27b0;
+$kahoot-yellow: #ffd000;
+$kahoot-dark-yellow: #ffc107;
+$text-light: #f8f9fa;
+$text-muted: #adb5bd;
+$shadow-dark: rgba(0, 0, 0, 0.4);
+
+.client {
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, $kahoot-dark-bg 0%, $kahoot-darker-bg 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: "Arial Rounded MT Bold", "Segoe UI", sans-serif;
+  animation: fadeIn 0.8s ease-out;
+
+  &-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: rgba($kahoot-darker-bg, 0.8);
+    border-radius: 20px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba($kahoot-purple, 0.2);
+    backdrop-filter: blur(10px);
+  }
+
+  &-transition-enter {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  &-transition-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  &-transition-exit {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  &-transition-exit-active {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  }
+
+  // Status indicator (optional)
+  &-status {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: rgba($kahoot-purple, 0.2);
+    border-radius: 10px;
+    color: $text-light;
+    font-weight: 600;
+    text-align: center;
+    border-left: 4px solid $kahoot-yellow;
+
+    &-character {
+      color: $kahoot-yellow;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    background-position: 0% 0%;
+  }
+  to {
+    opacity: 1;
+    background-position: 100% 100%;
+  }
+}
+
+@keyframes purplePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba($kahoot-purple, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba($kahoot-purple, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba($kahoot-purple, 0);
+  }
+}
+
+@media (max-width: 768px) {
+  .client {
+    padding: 1rem;
+
+    &-container {
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .client {
+    padding: 0.5rem;
+
+    &-container {
+      padding: 1rem;
+      border-radius: 12px;
+    }
+
+    &-status {
+      font-size: 0.9rem;
+      padding: 0.8rem;
+    }
+  }
+}

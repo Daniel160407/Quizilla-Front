@@ -1,4 +1,3 @@
-// Variables
 $kahoot-red: #E21B3C;
 $kahoot-blue: #1368CE;
 $kahoot-green: #26890C;
@@ -13,9 +12,7 @@ $back-button-color: #6a1b9a;
 $timer-color: #FF5722;
 $timer-text-color: #FFFFFF;
 
-/* ==================== */
-/* LOADING ANIMATION */
-/* ==================== */
+
 .kahoot-loading {
   position: fixed;
   top: 0;
@@ -67,9 +64,6 @@ $timer-text-color: #FFFFFF;
   }
 }
 
-/* ==================== */
-/* TIMER STYLES */
-/* ==================== */
 .timer-container {
   position: absolute;
   top: 20px;
@@ -96,9 +90,6 @@ $timer-text-color: #FFFFFF;
   }
 }
 
-/* ==================== */
-/* QUESTION STYLES */
-/* ==================== */
 .question {
   position: relative;
   max-width: 800px;

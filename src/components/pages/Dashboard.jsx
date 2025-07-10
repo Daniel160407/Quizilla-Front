@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "../navigation/Navbar";
 import useAxios from "../hooks/UseAxios";
 import "../../style/pages/Dashboard.scss";
 import DashboardQuizList from "../lists/DashboardQuizList";
 import Question from "../model/Question";
 import { FaDesktop } from "react-icons/fa";
+import WebSocketManager from "../hooks/WebSocketManager";
 
 const Dashboard = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -15,12 +16,30 @@ const Dashboard = () => {
   const [selectedQuiz, setSelectedQuiz] = useState({});
   const [projectorWindow, setProjectorWindow] = useState(null);
   const [broadcastChannel, setBroadcastChannel] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
+
+  const wsManager = useRef(null);
 
   useEffect(() => {
+    if (!wsManager.current) {
+      initializeWebSocket();
+    }
+
     const channel = new BroadcastChannel("quiz_channel");
     setBroadcastChannel(channel);
 
+    channel.onmessage = (event) => {
+      switch (event.data.type) {
+        case "QUESTION_CANCEL":
+          handleTimeUp();
+          break;
+      }
+    };
+
     return () => {
+      if (wsManager.current) {
+        wsManager.current.disconnect();
+      }
       channel.close();
     };
   }, []);
@@ -53,6 +72,57 @@ const Dashboard = () => {
     }
   }, [showQuestion]);
 
+  const initializeWebSocket = () => {
+    wsManager.current = new WebSocketManager("/socket");
+
+    wsManager.current.connect();
+
+    wsManager.current.addMessageHandler((message) => {
+      try {
+        switch (message.type) {
+          case "PLAYER_ANSWERED":
+            handlePlayerAnswered(message.payload);
+            break;
+          default:
+            console.warn("Unhandled message type:", message.type);
+        }
+      } catch (e) {
+        console.error("Error parsing WebSocket message:", e);
+      }
+    });
+
+    wsManager.current.addConnectionListener("open", () => {
+      setIsConnected(true);
+      setError(null);
+      console.log("connected");
+    });
+
+    wsManager.current.addConnectionListener("close", () => {
+      setIsConnected(false);
+      setError("Connection lost. Trying to reconnect...");
+
+      setTimeout(() => {
+        if (!wsManager.current?.isConnected()) {
+          initializeWebSocket();
+        }
+      }, 3000);
+    });
+
+    wsManager.current.addConnectionListener("error", (err) => {
+      setIsConnected(false);
+      setError("Connection error. Attempting to reconnect...");
+    });
+  };
+
+  const handlePlayerAnswered = (groupName) => {
+    if (broadcastChannel) {
+      broadcastChannel.postMessage({
+        type: "PLAYER_ANSWERED",
+        payload: groupName,
+      });
+    }
+  };
+
   const handleQuizClick = (quiz) => {
     setSelectedQuiz(quiz);
     setShowQuestion(true);
@@ -64,17 +134,37 @@ const Dashboard = () => {
         payload: quiz,
       });
     }
+
+    wsManager.current.send({
+      sender: "admin",
+      type: "QUESTION",
+      payload: JSON.stringify(quiz),
+    });
   };
 
   const handleBackToDashboard = () => {
     setShowQuestion(false);
     setTimeout(() => {
-        broadcastChannel.postMessage({
-          type: "QUIZ_CENCELED",
-          payload: selectedQuiz,
-        });
-      }, 1000);
+      broadcastChannel.postMessage({
+        type: "QUIZ_CENCELED",
+        payload: selectedQuiz,
+      });
+    }, 1000);
+
+    wsManager.current.send({
+      sender: "admin",
+      type: "QUESTION_CANCEL",
+      payload: '',
+    });
   };
+
+  const handleTimeUp = () => {
+    wsManager.current.send({
+      sender: "admin",
+      type: "QUESTION_CANCEL",
+      payload: '',
+    });
+  }
 
   const openProjector = () => {
     const win = window.open("/projector", "_blank", "width=1200,height=800");

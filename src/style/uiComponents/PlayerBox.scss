@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap');
+
+$kahoot-purple: #46178f;
+$kahoot-pink: #e21b57;
+$kahoot-blue: #2f80ed;
+$kahoot-green: #27ae60;
+$kahoot-yellow: #f2c94c;
+$neon-glow: 0 0 10px rgba(123, 44, 191, 0.7);
+
+.player {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(135deg, rgba($kahoot-purple, 0.8) 0%, rgba(darken($kahoot-purple, 10%), 0.9) 100%);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  color: white;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  border-left: 4px solid $kahoot-pink;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3), $neon-glow;
+    background: linear-gradient(135deg, rgba($kahoot-blue, 0.8) 0%, rgba(darken($kahoot-blue, 10%), 0.9) 100%);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+              rgba(255,255,255,0.1) 0%, 
+              rgba(255,255,255,0) 50%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+
+  &:hover::before {
+    transform: translateX(100%);
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.5px;
+  }
+
+  &:nth-child(1) {
+    border-left-color: $kahoot-yellow;
+    background: linear-gradient(135deg, rgba($kahoot-yellow, 0.8) 0%, rgba(darken($kahoot-yellow, 20%), 0.9) 100%);
+    color: darken($kahoot-yellow, 40%);
+    text-shadow: none;
+  }
+  &:nth-child(2) {
+    border-left-color: $kahoot-pink;
+    background: linear-gradient(135deg, rgba($kahoot-pink, 0.8) 0%, rgba(darken($kahoot-pink, 10%), 0.9) 100%);
+  }
+  &:nth-child(3) {
+    border-left-color: $kahoot-blue;
+    background: linear-gradient(135deg, rgba($kahoot-blue, 0.8) 0%, rgba(darken($kahoot-blue, 10%), 0.9) 100%);
+  }
+  &:nth-child(4) {
+    border-left-color: $kahoot-green;
+    background: linear-gradient(135deg, rgba($kahoot-green, 0.8) 0%, rgba(darken($kahoot-green, 10%), 0.9) 100%);
+  }
+}
+
+@keyframes playerEntry {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.player.new-player {
+  animation: playerEntry 0.4s ease-out forwards;
+}
+
+@media (max-width: 768px) {
+  .player {
+    padding: 10px 12px;
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+}

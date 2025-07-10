@@ -1,0 +1,262 @@
+$kahoot-red: #e21b3c;
+$kahoot-blue: #1368ce;
+$kahoot-green: #26890c;
+$kahoot-yellow: #ffd000;
+$kahoot-purple: #7b1fa2;
+$text-dark: #333333;
+$correct-highlight: #4caf50;
+$white: #ffffff;
+$black: #000000;
+$shadow-color: rgba(0, 0, 0, 0.2);
+
+.client-question {
+  position: relative;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: $white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba($kahoot-purple, 0.1);
+  animation: fadeIn 0.5s ease-out;
+
+  h1 {
+    color: $kahoot-purple;
+    font-size: 3rem;
+    margin-bottom: 3rem;
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    line-height: 1.3;
+    padding: 0 1rem;
+  }
+
+  .client-answers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+
+    .client-answer-option {
+      border-radius: 16px;
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $white;
+      font-weight: 700;
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 6px 12px $shadow-color;
+      min-height: 120px;
+      position: relative;
+      overflow: hidden;
+      border: none;
+      text-align: center;
+
+      &:nth-child(1) {
+        background: $kahoot-red;
+      }
+      &:nth-child(2) {
+        background: $kahoot-blue;
+      }
+      &:nth-child(3) {
+        background: $kahoot-green;
+      }
+      &:nth-child(4) {
+        background: $kahoot-yellow;
+        color: $text-dark;
+      }
+
+      &:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 10px 20px $shadow-color;
+      }
+
+      &.client-selected-answer {
+        transform: scale(0.98);
+        box-shadow: 0 4px 8px $shadow-color;
+      }
+
+      &.show-result {
+        opacity: 0.7;
+        transform: scale(0.98);
+        transition: all 0.3s ease;
+
+        &.client-correct-answer {
+          opacity: 1;
+          transform: scale(1.05);
+          box-shadow: 0 8px 24px rgba($correct-highlight, 0.3);
+          animation: correctAnswerReveal 0.5s ease-out;
+        }
+      }
+
+      .result-indicator {
+        position: absolute;
+        top: 50%;
+        right: 2rem;
+        transform: translateY(-50%);
+        font-size: 3rem;
+        font-weight: bold;
+        opacity: 0;
+        animation: fadeInIndicator 0.5s 0.3s forwards;
+      }
+    }
+  }
+}
+
+.question-intro {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $kahoot-purple;
+  z-index: 1000;
+  animation: fadeOut 0.5s 3s forwards;
+
+  .question-intro-content {
+    text-align: center;
+    padding: 2rem;
+    max-width: 90%;
+
+    h1 {
+      color: $white;
+      font-size: 4rem;
+      font-weight: 800;
+      text-shadow: 0 4px 8px rgba($black, 0.3);
+      line-height: 1.2;
+      margin: 0;
+      animation: pulse 1s infinite alternate;
+    }
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes correctAnswerReveal {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes fadeInIndicator {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+// Responsive styles
+@media (max-width: 1024px) {
+  .client-question {
+    max-width: 800px;
+
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    .client-answers-grid {
+      .client-answer-option {
+        padding: 1.5rem;
+        min-height: 100px;
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .client-question {
+    padding: 2rem 1.5rem;
+    margin-top: 30px;
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .client-answers-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+
+      .client-answer-option {
+        padding: 1.5rem;
+        min-height: 90px;
+        font-size: 1.4rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .client-question {
+    padding: 1.5rem 1rem;
+    margin-top: 20px;
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    .client-answers-grid {
+      .client-answer-option {
+        padding: 1.2rem;
+        min-height: 80px;
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  .question-intro {
+    .question-intro-content {
+      h1 {
+        font-size: 2.5rem;
+      }
+    }
+  }
+}

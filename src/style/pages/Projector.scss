@@ -5,7 +5,7 @@ $error-red: #d32f2f;
 $text-light: #f4f4f4;
 $projector-purple: #9c27b0;
 
-.dashboard {
+.projector-dashboard {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;

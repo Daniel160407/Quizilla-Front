@@ -2,33 +2,25 @@ import { useEffect, useState } from "react";
 import "../../style/model/ClientQuestion.scss";
 import QuestionLoader from "../uiComponents/QuestionLoader";
 
-const ClientQuestion = ({ quiz, onAnswerSelection }) => {
+const ClientQuestion = ({ quiz, onAnswerSelection, quizStarted }) => {
   const [answers, setAnswers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [showResults, setShowResults] = useState(false);
-  const [showQuestionIntro, setShowQuestionIntro] = useState(true);
 
   useEffect(() => {
+    if (!quiz?.answer) return;
+
     const splitedAnswers = quiz.answer.split(", ");
     setAnswers(splitedAnswers);
 
-    const loadingTimer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(loadingTimer);
-  }, [quiz.answer]);
+    setIsLoading(true);
+  }, [quiz]);
 
   useEffect(() => {
-    if (!isLoading) {
-      const introTimer = setTimeout(() => {
-        setShowQuestionIntro(false);
-      }, 3000);
-
-      return () => clearTimeout(introTimer);
+    if(quizStarted) {
+      setIsLoading(false);
     }
-  }, [isLoading]);
+  }, [quizStarted]);
 
   const isCorrectAnswer = (answer) => {
     return answer.includes("**");
@@ -39,34 +31,21 @@ const ClientQuestion = ({ quiz, onAnswerSelection }) => {
   };
 
   const handleAnswerClick = (answer, index) => {
-    if (selectedAnswer !== null) return; // Prevent multiple selections
-    
+    if (selectedAnswer !== null) return;
+
     const correct = isCorrectAnswer(answer);
     setSelectedAnswer(index);
-    onAnswerSelection(correct); // Call the callback with true/false
-    setShowResults(true);
+    onAnswerSelection(correct);
   };
 
   if (isLoading) {
     return <QuestionLoader />;
   }
 
-  if (showQuestionIntro) {
-    return (
-      <div className="question-intro">
-        <div className="question-intro-content">
-          <h1>{quiz.question}</h1>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="client-question">
-      <h1>{quiz.question}</h1>
       <div className="client-answers-grid">
         {answers.map((answer, index) => {
-          const correct = isCorrectAnswer(answer);
           const cleanedAnswer = cleanAnswerText(answer);
           const isSelected = selectedAnswer === index;
 
@@ -74,18 +53,11 @@ const ClientQuestion = ({ quiz, onAnswerSelection }) => {
             <div
               key={index}
               className={`client-answer-option 
-                ${correct ? "client-correct-answer" : ""}
                 ${isSelected ? "client-selected-answer" : ""}
-                ${showResults ? "show-result" : ""}`}
+              `}
               onClick={() => handleAnswerClick(answer, index)}
-              data-correct={correct}
             >
               {cleanedAnswer}
-              {showResults && isSelected && (
-                <span className="result-indicator">
-                  {correct ? "✓" : "✗"}
-                </span>
-              )}
             </div>
           );
         })}

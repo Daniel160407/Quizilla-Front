@@ -135,7 +135,6 @@ $shadow-color: rgba(0, 0, 0, 0.2);
   }
 }
 
-// Animations
 @keyframes pulse {
   0% {
     transform: scale(1);
@@ -192,7 +191,6 @@ $shadow-color: rgba(0, 0, 0, 0.2);
   }
 }
 
-// Responsive styles
 @media (max-width: 1024px) {
   .client-question {
     max-width: 800px;

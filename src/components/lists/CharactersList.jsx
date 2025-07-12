@@ -31,7 +31,6 @@ const CharactersList = ({ characterName, setCharacterName }) => {
     { id: 12, name: 'tiger', image: '/images/characters/tiger.png' },
   ];
 
-  // Calculate columns based on screen width
   const getColumns = () => {
     if (windowWidth >= 1200) return 6;
     if (windowWidth >= 992) return 5;

@@ -6,6 +6,7 @@ import "../../style/pages/Client.scss";
 import GroupsList from "../lists/GroupsList";
 import WebSocketManager from "../hooks/WebSocketManager";
 import ClientQuestion from "../model/ClientQuestion";
+import useAxios from "../hooks/UseAxios";
 
 const Client = () => {
   const [groupName, setGroupName] = useState(Cookies.get("name") ?? "");
@@ -16,10 +17,22 @@ const Client = () => {
   const [allGroups, setAllGroups] = useState([]);
   const [quiz, setQuiz] = useState({});
   const [showQuiz, setShowQuiz] = useState(false);
+  const [quizStarted, setQuizStarted] = useState(false);
 
   const wsManager = useRef(null);
 
   useEffect(() => {
+    if (groupName !== "") {
+      const fetchGroups = async () => {
+        const response = await useAxios("/group", "get");
+        setAllGroups(response.data);
+      };
+
+      initializeWebSocket();
+
+      fetchGroups();
+    }
+
     return () => {
       if (wsManager.current) {
         wsManager.current.disconnect();
@@ -65,7 +78,7 @@ const Client = () => {
     wsManager.current.connect();
 
     wsManager.current.addMessageHandler((message) => {
-      const parsedPayload = JSON.parse(message.payload);
+      const parsedPayload = message.payload !== '' ? JSON.parse(message.payload) : '';
       switch (message.type) {
         case "GROUP_CREATED":
           handleGroupCreated(message);
@@ -76,9 +89,12 @@ const Client = () => {
           setShowQuiz(true);
           break;
         case "QUESTION_CANCEL":
-          console.log("groupname: " + groupName);
           setAllGroups(parsedPayload);
           setShowQuiz(false);
+          setQuizStarted(false);
+          break;
+        case "QUIZ_START":
+          setQuizStarted(true);
           break;
       }
     });
@@ -90,7 +106,7 @@ const Client = () => {
   };
 
   const handleGroupCreated = (message) => {
-    Cookies.set("name", characterName, { expires: 1 });
+    Cookies.set("name", groupName, { expires: 1 });
     setAllGroups(JSON.parse(message.payload) || []);
     setShowCharacters(false);
   };
@@ -132,7 +148,7 @@ const Client = () => {
       )}
       {groupName !== "" && !showQuiz && <GroupsList groups={allGroups} />}
       {showQuiz && (
-        <ClientQuestion quiz={quiz} onAnswerSelection={onAnswerSelection} />
+        <ClientQuestion quiz={quiz} onAnswerSelection={onAnswerSelection} quizStarted={quizStarted} />
       )}
     </div>
   );

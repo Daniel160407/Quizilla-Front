@@ -4,13 +4,25 @@ import GroupsList from "../lists/GroupsList";
 import useAxios from "../hooks/UseAxios";
 import "../../style/pages/Groups.scss";
 import Navbar from "../navigation/Navbar";
+import ShowConnectionLinkPageBtn from "../uiComponents/ShowConnectionLinkPageBtn";
 
 const Groups = () => {
   const [allGroups, setAllGroups] = useState([]);
   const [error, setError] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [broadcastChannel, setBroadcastChannel] = useState(null);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const wsManager = useRef(null);
+
+  useEffect(() => {
+    const channel = new BroadcastChannel("quiz_channel");
+    setBroadcastChannel(channel);
+
+    return () => {
+      channel.close();
+    };
+  }, []);
 
   useEffect(() => {
     if (!wsManager.current) {
@@ -27,7 +39,6 @@ const Groups = () => {
   const fetchGroups = async () => {
     try {
       const response = await useAxios("/group", "get");
-      console.log(response.data);
       setAllGroups(response.data);
     } catch (err) {
       console.error("Failed to fetch groups", err);
@@ -80,10 +91,25 @@ const Groups = () => {
     setAllGroups(groups);
   };
 
+  const handleClick = () => {
+    setShowInstructions(!showInstructions);
+
+    console.log(!showInstructions);
+    
+    setTimeout(() => {
+      broadcastChannel.postMessage({
+        type: "SHOW_INSTRUCTIONS",
+        payload: !showInstructions,
+      });
+    }, 1000);
+  };
+
   return (
     <>
       <Navbar />
       <div className="admin-groups-container">
+        <ShowConnectionLinkPageBtn onClick={handleClick} />
+
         <div className="admin-groups-header">
           <h2>Groups Management</h2>
         </div>

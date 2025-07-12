@@ -1,12 +1,15 @@
 import "../../style/lists/GroupsList.scss";
 
 const GroupsList = ({ groups }) => {
+  // Find max points
+  const maxPoints = Math.max(...groups.map(group => group.points || 0));
+  
   return (
     <div className="groups-list">
       {groups.map((group) => (
         <div 
           key={group.id}
-          className={`group-card`}
+          className={`group-card ${group.points === maxPoints && maxPoints > 0 ? 'leader' : ''}`}
         >
           <div className="group-image-container">
             <img 

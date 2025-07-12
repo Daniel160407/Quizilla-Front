@@ -8,9 +8,14 @@ import countdown20v2 from "/sounds/countdown20v2.mp3";
 import countdown10v1 from "/sounds/countdown10v1.mp3";
 import countdown10v2 from "/sounds/countdown10v2.mp3";
 import answerSound from "/sounds/answer.mp3";
-import PlayerBox from "../uiComponents/PlayerBox";
+import GroupsAnsweredList from "../lists/GroupsAnsweredList";
 
-const ProjectorQuestion = ({ quiz, playersAnswered, onTimeUp }) => {
+const ProjectorQuestion = ({
+  quiz,
+  playersAnswered,
+  onTimeUp,
+  quizStarted,
+}) => {
   const [answers, setAnswers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState(
@@ -68,9 +73,13 @@ const ProjectorQuestion = ({ quiz, playersAnswered, onTimeUp }) => {
     if (!isLoading) {
       const introTimer = setTimeout(() => {
         setShowQuestionIntro(false);
+        quizStarted();
+        console.log('started2')
       }, 3000);
 
-      return () => clearTimeout(introTimer);
+      return () => {
+        clearTimeout(introTimer);
+      };
     }
   }, [isLoading]);
 
@@ -192,14 +201,7 @@ const ProjectorQuestion = ({ quiz, playersAnswered, onTimeUp }) => {
         </div>
       </div>
 
-      <div className="players-answered-sidebar">
-        <h3>Players Answered: {playersAnswered.length}</h3>
-        <div className="players-list">
-          {playersAnswered.map((player, index) => (
-            <PlayerBox key={index} player={player} />
-          ))}
-        </div>
-      </div>
+      <GroupsAnsweredList groupsAnswered={playersAnswered}/>
     </div>
   );
 };

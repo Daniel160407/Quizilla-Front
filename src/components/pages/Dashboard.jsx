@@ -15,66 +15,72 @@ const Dashboard = () => {
   const [showQuestion, setShowQuestion] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState({});
   const [projectorWindow, setProjectorWindow] = useState(null);
-  const [broadcastChannel, setBroadcastChannel] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
 
   const wsManager = useRef(null);
+  const broadcastChannel = useRef(null);
 
   useEffect(() => {
-    if (!wsManager.current) {
-      initializeWebSocket();
-    }
+    // Initialize WebSocket and BroadcastChannel
+    const initializeComponents = () => {
+      // Create BroadcastChannel first
+      broadcastChannel.current = new BroadcastChannel("quiz_channel");
+      
+      // Set up message handler
+      broadcastChannel.current.onmessage = (event) => {
+        switch (event.data.type) {
+          case "QUESTION_CANCEL":
+            handleTimeUp();
+            break;
+          case "QUIZ_START":
+            handleQuizStart();
+            break;
+        }
+      };
 
-    const channel = new BroadcastChannel("quiz_channel");
-    setBroadcastChannel(channel);
-
-    channel.onmessage = (event) => {
-      switch (event.data.type) {
-        case "QUESTION_CANCEL":
-          handleTimeUp();
-          break;
+      // Initialize WebSocket if not already done
+      if (!wsManager.current) {
+        initializeWebSocket();
       }
     };
 
+    initializeComponents();
+
     return () => {
+      // Cleanup function
       if (wsManager.current) {
         wsManager.current.disconnect();
       }
-      channel.close();
+      if (broadcastChannel.current) {
+        broadcastChannel.current.close();
+      }
     };
   }, []);
 
   useEffect(() => {
     if (showQuestion === false) {
-      const fetchQuizzes = async () => {
+      const fetchData = async () => {
         try {
           setLoading(true);
-          const response = await useAxios("/quiz", "get");
-          setQuizzes(response.data);
+          const [quizzesResponse, categoriesResponse] = await Promise.all([
+            useAxios("/quiz", "get"),
+            useAxios("/category", "get")
+          ]);
+          setQuizzes(quizzesResponse.data);
+          setCategories(categoriesResponse.data);
         } catch (err) {
-          setError(err.message || "Failed to load quizzes");
+          setError(err.message || "Failed to load data");
         } finally {
           setLoading(false);
         }
       };
 
-      const fetchCategories = async () => {
-        try {
-          const response = await useAxios("/category", "get");
-          setCategories(response.data);
-        } catch (err) {
-          setError(err.message || "Failed to load categories");
-        }
-      };
-
-      fetchQuizzes();
-      fetchCategories();
+      fetchData();
     }
   }, [showQuestion]);
 
   const initializeWebSocket = () => {
     wsManager.current = new WebSocketManager("/socket");
-
     wsManager.current.connect();
 
     wsManager.current.addMessageHandler((message) => {
@@ -87,20 +93,19 @@ const Dashboard = () => {
             console.warn("Unhandled message type:", message.type);
         }
       } catch (e) {
-        console.error("Error parsing WebSocket message:", e);
+        console.error("Error handling WebSocket message:", e);
       }
     });
 
     wsManager.current.addConnectionListener("open", () => {
       setIsConnected(true);
       setError(null);
-      console.log("connected");
+      console.log("WebSocket connected");
     });
 
     wsManager.current.addConnectionListener("close", () => {
       setIsConnected(false);
       setError("Connection lost. Trying to reconnect...");
-
       setTimeout(() => {
         if (!wsManager.current?.isConnected()) {
           initializeWebSocket();
@@ -111,25 +116,34 @@ const Dashboard = () => {
     wsManager.current.addConnectionListener("error", (err) => {
       setIsConnected(false);
       setError("Connection error. Attempting to reconnect...");
+      console.error("WebSocket error:", err);
     });
   };
 
   const handlePlayerAnswered = (groupName) => {
-    if (broadcastChannel) {
-      broadcastChannel.postMessage({
+    if (!broadcastChannel.current) {
+      console.error("BroadcastChannel not initialized");
+      return;
+    }
+    
+    try {
+      broadcastChannel.current.postMessage({
         type: "PLAYER_ANSWERED",
         payload: groupName,
       });
+    } catch (e) {
+      console.error("Error posting message to BroadcastChannel:", e);
     }
   };
 
   const handleQuizClick = (quiz) => {
     setSelectedQuiz(quiz);
     setShowQuestion(true);
+    
     useAxios(`/quiz/enable?id=${quiz.id}&enable=${false}`, "put");
 
-    if (broadcastChannel) {
-      broadcastChannel.postMessage({
+    if (broadcastChannel.current) {
+      broadcastChannel.current.postMessage({
         type: "QUIZ_SELECTED",
         payload: quiz,
       });
@@ -144,17 +158,20 @@ const Dashboard = () => {
 
   const handleBackToDashboard = () => {
     setShowQuestion(false);
+    
     setTimeout(() => {
-      broadcastChannel.postMessage({
-        type: "QUIZ_CENCELED",
-        payload: selectedQuiz,
-      });
+      if (broadcastChannel.current) {
+        broadcastChannel.current.postMessage({
+          type: "QUIZ_CANCELED",
+          payload: selectedQuiz,
+        });
+      }
     }, 1000);
 
     wsManager.current.send({
       sender: "admin",
       type: "QUESTION_CANCEL",
-      payload: '',
+      payload: "",
     });
   };
 
@@ -162,9 +179,17 @@ const Dashboard = () => {
     wsManager.current.send({
       sender: "admin",
       type: "QUESTION_CANCEL",
-      payload: '',
+      payload: "",
     });
-  }
+  };
+
+  const handleQuizStart = () => {
+    wsManager.current.send({
+      sender: "admin",
+      type: "QUIZ_START",
+      payload: "",
+    });
+  };
 
   const openProjector = () => {
     const win = window.open("/projector", "_blank", "width=1200,height=800");
@@ -172,10 +197,12 @@ const Dashboard = () => {
 
     if (selectedQuiz && Object.keys(selectedQuiz).length > 0) {
       setTimeout(() => {
-        broadcastChannel.postMessage({
-          type: "QUIZ_SELECTED",
-          payload: selectedQuiz,
-        });
+        if (broadcastChannel.current) {
+          broadcastChannel.current.postMessage({
+            type: "QUIZ_SELECTED",
+            payload: selectedQuiz,
+          });
+        }
       }, 1000);
     }
   };

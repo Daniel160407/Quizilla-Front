@@ -10,7 +10,7 @@ const QuizEditForm = ({
 }) => {
   const [formData, setFormData] = useState({
     categoryId,
-    type: "",
+    type: "A",
     question: "",
     answer: "",
     mediaUrl: "",

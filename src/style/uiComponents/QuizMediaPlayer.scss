@@ -1,0 +1,17 @@
+.media-container {
+  position: relative; // needed for absolute positioning of hover
+
+  .hover-shape {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; // height of your hover shape bar
+    background-color: black; // semi-transparent black
+    opacity: 1;
+    pointer-events: none; // so it doesn't block clicks on video
+    transition: opacity 0.3s ease;
+    border-radius: 0 0 8px 8px;
+    z-index: 10;
+  }
+}

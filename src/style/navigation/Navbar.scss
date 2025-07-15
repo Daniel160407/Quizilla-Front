@@ -1,13 +1,11 @@
-// Variables
-$primary-color: #46178f; // Kahoot purple
-$secondary-color: #ff6b6b; // Kahoot red
+$primary-color: #46178f;
+$secondary-color: #ff6b6b;
 $text-color: #2d3748;
 $text-light: #f8f9fa;
 $transition-speed: 0.3s;
 $shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 $border-radius: 8px;
 
-// Mixins
 @mixin flex-center {
   display: flex;
   align-items: center;
@@ -21,7 +19,6 @@ $border-radius: 8px;
   }
 }
 
-// Navbar Styles
 .header {
   position: fixed;
   top: 0;
@@ -48,7 +45,6 @@ $border-radius: 8px;
   }
 }
 
-// Desktop Navigation
 .desktop-nav {
   ul {
     display: flex;
@@ -94,7 +90,6 @@ $border-radius: 8px;
   }
 }
 
-// Mobile Menu Toggle
 .mobile-menu-toggle {
   display: none;
   background: none;
@@ -111,7 +106,6 @@ $border-radius: 8px;
   }
 }
 
-// Mobile Menu
 .mobile-menu {
   position: fixed;
   top: 0;
@@ -165,7 +159,6 @@ $border-radius: 8px;
   }
 }
 
-// Overlay for mobile menu (optional)
 .mobile-menu-overlay {
   position: fixed;
   top: 0;
@@ -184,7 +177,6 @@ $border-radius: 8px;
   }
 }
 
-// Responsive Design
 @media (max-width: 768px) {
   .desktop-nav {
     display: none;
@@ -195,7 +187,6 @@ $border-radius: 8px;
   }
 }
 
-// Animation for menu items
 @keyframes fadeIn {
   from {
     opacity: 0;

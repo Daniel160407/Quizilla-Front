@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useAxios from "../hooks/UseAxios";
 import "../../style/pages/Projector.scss";
 import ProjectorQuizList from "../lists/ProjectorQuizList";
 import ProjectorQuestion from "../model/ProjectorQuestion";
+import Instructions from "./Instructions";
+import WebSocketManager from "../hooks/WebSocketManager";
+import WinnerStands from "./WinnerStands";
 
 const Projector = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -12,6 +15,15 @@ const Projector = () => {
   const [showQuestion, setShowQuestion] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState({});
   const [broadcastChannel, setBroadcastChannel] = useState(null);
+  const [playersAnswered, setPlayersAnswered] = useState([]);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [showWinnerStands, setShowWinnerStands] = useState(false);
+  const [groups, setGroups] = useState([]);
+
+  const wsManager = useRef(null);
+  const reconnectAttempts = useRef(0);
+  const maxReconnectAttempts = 5;
 
   useEffect(() => {
     const channel = new BroadcastChannel("quiz_channel");
@@ -23,9 +35,20 @@ const Projector = () => {
           setSelectedQuiz(event.data.payload);
           setShowQuestion(true);
           break;
-        case "QUIZ_CENCELED":
-          selectedQuiz.enabled = 1;
+        case "QUIZ_CANCELED":
+          setSelectedQuiz((prev) => ({ ...prev, enabled: 1 }));
           setShowQuestion(false);
+          setPlayersAnswered([]);
+          break;
+        case "PLAYER_ANSWERED":
+          setPlayersAnswered((prev) => [...prev, event.data.payload]);
+          break;
+        case "SHOW_INSTRUCTIONS":
+          setShowInstructions(event.data.payload);
+          break;
+        case "SHOW_WINNER_STANDS":
+          setGroups(event.data.payload);
+          setShowWinnerStands(!showWinnerStands);
           break;
       }
     };
@@ -36,54 +59,135 @@ const Projector = () => {
   }, []);
 
   useEffect(() => {
+    initializeWebSocket();
+
+    return () => {
+      if (wsManager.current) {
+        wsManager.current.disconnect();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     if (showQuestion === false) {
-      const fetchQuizzes = async () => {
-        try {
-          setLoading(true);
-          const response = await useAxios("/quiz", "get");
-          setQuizzes(response.data);
-        } catch (err) {
-          setError(err.message || "Failed to load quizzes");
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      const fetchCategories = async () => {
-        try {
-          const response = await useAxios("/category", "get");
-          setCategories(response.data);
-        } catch (err) {
-          setError(err.message || "Failed to load categories");
-        }
-      };
-
-      fetchQuizzes();
-      fetchCategories();
+      fetchData();
     }
   }, [showQuestion]);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const [quizzesRes, categoriesRes] = await Promise.all([
+        useAxios("/quiz", "get"),
+        useAxios("/category", "get"),
+      ]);
+      setQuizzes(quizzesRes.data);
+      setCategories(categoriesRes.data);
+    } catch (err) {
+      setError(err.message || "Failed to load data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const initializeWebSocket = () => {
+    if (wsManager.current?.isConnected()) {
+      return;
+    }
+
+    wsManager.current = new WebSocketManager("/socket");
+
+    wsManager.current.addConnectionListener("open", () => {
+      console.log("WebSocket connected");
+      setIsConnected(true);
+      setError(null);
+      reconnectAttempts.current = 0;
+    });
+
+    wsManager.current.addConnectionListener("close", () => {
+      setIsConnected(false);
+      if (reconnectAttempts.current < maxReconnectAttempts) {
+        const delay = Math.min(3000 * (reconnectAttempts.current + 1), 15000);
+        setError(`Connection lost. Reconnecting in ${delay / 1000} seconds...`);
+
+        setTimeout(() => {
+          reconnectAttempts.current += 1;
+          initializeWebSocket();
+        }, delay);
+      } else {
+        setError("Max reconnection attempts reached. Please refresh the page.");
+      }
+    });
+
+    wsManager.current.addConnectionListener("error", (err) => {
+      console.error("WebSocket error:", err);
+      setIsConnected(false);
+      setError("Connection error. Attempting to reconnect...");
+    });
+
+    wsManager.current.connect();
+  };
+
+  const sendWebSocketMessage = (message) => {
+    if (!wsManager.current?.isConnected()) {
+      setError("Cannot send message - not connected to WebSocket");
+      return false;
+    }
+
+    try {
+      wsManager.current.send(message);
+      return true;
+    } catch (err) {
+      console.error("Failed to send WebSocket message:", err);
+      setError("Failed to send message. Trying to reconnect...");
+      initializeWebSocket();
+      return false;
+    }
+  };
+
+  const handleTimeUp = () => {
+    sendWebSocketMessage({
+      sender: "projector",
+      type: "QUESTION_CANCEL",
+      payload: selectedQuiz.points
+    });
+  };
+
+  const handleQuizStarted = () => {
+    sendWebSocketMessage({
+      sender: "projector",
+      type: "QUIZ_START",
+      payload: JSON.stringify(selectedQuiz),
+    });
+  };
 
   return (
     <>
       {showQuestion ? (
-        <ProjectorQuestion quiz={selectedQuiz} />
+        <ProjectorQuestion
+          quiz={selectedQuiz}
+          playersAnswered={playersAnswered}
+          onTimeUp={handleTimeUp}
+          quizStarted={handleQuizStarted}
+        />
+      ) : showWinnerStands ? (
+        <WinnerStands groups={groups} />
+      ) : showInstructions ? (
+        <Instructions />
       ) : (
-        <div className="dashboard">
+        <div className="projector-dashboard">
           {error && <p className="error">{error}</p>}
           {loading ? (
             <p>Loading...</p>
           ) : (
-            categories.map((category) => {
-              const categoryQuizzes = quizzes.filter(
-                (quiz) => quiz.categoryId === category.id
-              );
-              return (
-                <div key={category.id} className="category">
-                  <h2>{category.name}</h2>
-                  <ProjectorQuizList quizzes={categoryQuizzes} />
-                </div>
-              );
-            })
+            categories.map((category) => (
+              <div key={category.id} className="category">
+                <h2>{category.name}</h2>
+                <ProjectorQuizList
+                  quizzes={quizzes.filter((q) => q.categoryId === category.id)}
+                />
+              </div>
+            ))
           )}
         </div>
       )}

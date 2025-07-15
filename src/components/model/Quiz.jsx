@@ -5,6 +5,7 @@ import { useState } from "react";
 
 const Quiz = ({ quiz, index, onEdit, onDelete, types }) => {
   const [showEditForm, setShowEditForm] = useState(false);
+  const hasRightAnswer = quiz.answer.includes('**');
 
   const handleEditSubmit = (updatedQuiz) => {
     onEdit(updatedQuiz);
@@ -19,8 +20,9 @@ const Quiz = ({ quiz, index, onEdit, onDelete, types }) => {
     <div
       className="quiz"
       data-type={quiz.type.toLowerCase().replace(/\s+/g, "")}
+      data-no-answer={!hasRightAnswer}
     >
-      {showEditForm && (
+      {showEditForm ? (
         <div className="quiz-edit-form-container">
           <QuizEditForm
             quiz={quiz}
@@ -30,12 +32,10 @@ const Quiz = ({ quiz, index, onEdit, onDelete, types }) => {
             onCancel={handleCancelEdit}
           />
         </div>
-      )}
-
-      {!showEditForm && (
+      ) : (
         <>
           <p>
-            <span>
+            <span className={!hasRightAnswer ? "no-answer" : ""}>
               {quiz.type}.{index + 1}
             </span>
             <span>{quiz.points} pts</span>

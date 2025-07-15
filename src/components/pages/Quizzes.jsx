@@ -49,7 +49,7 @@ const Quizzes = () => {
     try {
       const response = await useAxios("/quiz", "post", quizData);
 
-      setQuizzes((prevQuizzes) => [...prevQuizzes, response.data]);
+      setQuizzes(response.data);
 
       if (!types.includes(response.data.type)) {
         setTypes((prevTypes) => [...prevTypes, response.data.type]);

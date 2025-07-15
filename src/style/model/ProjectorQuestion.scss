@@ -122,16 +122,16 @@ $shadow-color: rgba(0, 0, 0, 0.2);
       }
 
       &:nth-child(1)::before {
-        content: "1";
+        content: "A";
       }
       &:nth-child(2)::before {
-        content: "2";
+        content: "B";
       }
       &:nth-child(3)::before {
-        content: "3";
+        content: "C";
       }
       &:nth-child(4)::before {
-        content: "4";
+        content: "D";
       }
 
       &:nth-child(1) {
@@ -190,6 +190,7 @@ $shadow-color: rgba(0, 0, 0, 0.2);
   right: -30px;
   width: 120px;
   height: 120px;
+  z-index: 1000;
 
   .timer-circle {
     width: 100%;

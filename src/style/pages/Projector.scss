@@ -5,9 +5,9 @@ $error-red: #d32f2f;
 $text-light: #f4f4f4;
 $projector-purple: #9c27b0;
 
-.dashboard {
+.projector-dashboard {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 1.5rem;
   padding: 2rem;
   background: linear-gradient(135deg, darken(nth($kahoot-colors, 1), 10%) 0%, #2d075a 100%);
@@ -35,7 +35,6 @@ $projector-purple: #9c27b0;
     min-height: 400px;
     border-radius: 24px;
     overflow: hidden;
-    cursor: pointer;
     padding: 20px;
     transform: scale(1);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);

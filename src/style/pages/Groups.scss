@@ -1,0 +1,249 @@
+@use '../uiComponents/Loader';
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
+
+$kahoot-dark: #1a103d;
+$kahoot-purple: #7b2cbf;
+$kahoot-pink: #e21b57;
+$kahoot-blue: #4cc9f0;
+$kahoot-accent: #f72585;
+$kahoot-green: 	#7bb27b;
+$kahoot-yellow: #ffd000;
+
+$neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
+
+.admin-groups-container {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(135deg, darken($kahoot-dark, 5%) 0%, $kahoot-dark 100%);
+  min-height: 100vh;
+  padding: 30px;
+  margin-top: 50px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, 
+      $kahoot-purple 0%, 
+      $kahoot-pink 25%, 
+      $kahoot-blue 50%, 
+      $kahoot-green 75%, 
+      $kahoot-yellow 100%);
+    z-index: 1;
+  }
+
+  .admin-groups-header {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 2;
+    animation: fadeInDown 0.6s ease-out;
+
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 0;
+      padding: 20px 0;
+      text-shadow: 0 4px 10px rgba($kahoot-accent, 0.5);
+      position: relative;
+      display: inline-block;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 4px;
+        background: linear-gradient(90deg, transparent 0%, $kahoot-blue 50%, transparent 100%);
+        border-radius: 2px;
+      }
+    }
+  }
+
+  .admin-groups-content {
+    background: rgba($kahoot-dark, 0.7);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba($kahoot-purple, 0.2);
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease-out;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba($kahoot-purple, 0.1) 0%, transparent 70%);
+      animation: rotateGradient 20s linear infinite;
+      z-index: -1;
+    }
+  }
+
+  .groups-list-section {
+    h3 {
+      font-size: 1.5rem;
+      color: lighten($kahoot-purple, 20%);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+
+      &::before, &::after {
+        content: '';
+        flex: 1;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, $kahoot-pink 50%, transparent 100%);
+        margin: 0 15px;
+      }
+    }
+  }
+
+  .connection-status {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+
+    &.connected {
+      background: rgba(#27ae60, 0.9);
+      color: white;
+      &::before {
+        content: '✓ ';
+      }
+    }
+
+    &.disconnected {
+      background: rgba(#e21b57, 0.9);
+      color: white;
+      &::before {
+        content: '✗ ';
+      }
+    }
+  }
+
+  .error-message {
+    background: rgba($kahoot-pink, 0.9);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    animation: pulseError 2s infinite;
+    box-shadow: 0 4px 15px rgba($kahoot-pink, 0.3);
+
+    button {
+      background: white;
+      color: $kahoot-pink;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rotateGradient {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulseError {
+  0% {
+    box-shadow: 0 0 0 0 rgba($kahoot-pink, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba($kahoot-pink, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba($kahoot-pink, 0);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-groups-container {
+    padding: 15px;
+
+    .admin-groups-header h2 {
+      font-size: 2rem;
+    }
+
+    .admin-groups-content {
+      padding: 20px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-groups-container {
+    padding: 10px;
+
+    .admin-groups-header h2 {
+      font-size: 1.5rem;
+      padding: 10px 0;
+
+      &::after {
+        width: 90%;
+      }
+    }
+
+    .admin-groups-content {
+      padding: 15px;
+    }
+  }
+}

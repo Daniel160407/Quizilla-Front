@@ -1,0 +1,300 @@
+$kahoot-purple: #9c27b0;
+$kahoot-yellow: #ffd000;
+$kahoot-red: #e21b3c;
+$kahoot-blue: #1368ce;
+$dark-bg: #0d0d0d;
+$darker-bg: #1a1a1a;
+$text-light: #ffffff;
+$text-muted: #aaaaaa;
+$card-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+$highlight-glow: 0 0 15px rgba($kahoot-purple, 0.7);
+$section-glow: 0 0 20px rgba($kahoot-purple, 0.3);
+
+.instructions {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: 3rem;
+  background: linear-gradient(135deg, $dark-bg 0%, $darker-bg 100%);
+  text-align: center;
+  animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  color: $text-light;
+  overflow-y: auto;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 30%, rgba($kahoot-purple, 0.15) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  .instructions-container {
+    max-width: 900px;
+    width: 100%;
+    padding: 3rem;
+    background: rgba($darker-bg, 0.9);
+    border-radius: 20px;
+    box-shadow: $card-shadow;
+    border: 1px solid rgba($kahoot-purple, 0.4);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba($kahoot-purple, 0.05) 0%,
+        rgba($kahoot-yellow, 0.03) 50%,
+        rgba($kahoot-red, 0.05) 100%
+      );
+      transform: rotate(30deg);
+      z-index: -1;
+    }
+  }
+
+  h1 {
+    color: $kahoot-yellow;
+    font-size: 3.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+    padding-bottom: 1.5rem;
+    font-weight: 800;
+    text-shadow: 0 3px 10px rgba($kahoot-purple, 0.7);
+    letter-spacing: 1px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 5px;
+      background: linear-gradient(90deg, $kahoot-purple, $kahoot-yellow);
+      border-radius: 3px;
+      box-shadow: $highlight-glow;
+    }
+  }
+
+  .instruction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+    margin-top: 3rem;
+  }
+
+  p {
+    font-size: 2em;
+    line-height: 1.8;
+    color: $text-light;
+    padding: 1.5rem;
+    background: rgba($kahoot-purple, 0.15);
+    border-radius: 12px;
+    border-left: 5px solid $kahoot-purple;
+    text-align: left;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    margin: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        rgba($kahoot-purple, 0.3) 0%,
+        transparent 50%,
+        rgba($kahoot-purple, 0.1) 100%
+      );
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    &:hover {
+      transform: translateX(10px);
+      background: rgba($kahoot-purple, 0.25);
+      box-shadow: $highlight-glow;
+
+      &::before {
+        transform: translateX(100%);
+      }
+    }
+
+    &:nth-child(2) {
+      border-left-color: $kahoot-blue;
+      background: rgba($kahoot-blue, 0.15);
+    }
+
+    &:nth-child(3) {
+      border-left-color: $kahoot-yellow;
+      background: rgba($kahoot-yellow, 0.15);
+    }
+
+    &:nth-child(4) {
+      border-left-color: $kahoot-red;
+      background: rgba($kahoot-red, 0.15);
+    }
+  }
+
+  .url-highlight {
+    font-weight: 600;
+    color: $kahoot-yellow;
+    background: rgba($kahoot-purple, 0.25) !important;
+    padding: 1.5rem;
+    font-family: 'Roboto Mono', monospace;
+    border-left: 5px solid $kahoot-yellow !important;
+    text-shadow: 0 0 8px rgba($kahoot-yellow, 0.5);
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    &::before {
+      content: '🔗';
+      font-size: 1.2rem;
+    }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes subtlePulse {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
+
+// Responsive design
+@media (max-width: 1200px) {
+  .instructions {
+    padding: 2rem;
+
+    h1 {
+      font-size: 3rem;
+    }
+
+    p {
+      font-size: 1.3rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .instructions {
+    padding: 1.5rem;
+    justify-content: flex-start;
+    padding-top: 4rem;
+
+    .instructions-container {
+      padding: 2rem;
+      backdrop-filter: blur(5px);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      padding: 1.2rem;
+    }
+
+    .url-highlight {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .instructions {
+    padding: 1rem;
+    padding-top: 3rem;
+
+    .instructions-container {
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      padding-bottom: 1rem;
+      
+      &::after {
+        width: 150px;
+        height: 4px;
+      }
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      backdrop-filter: none;
+    }
+
+    .url-highlight {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+}
+
+.instructions-loader {
+  height: 60px;
+  aspect-ratio: 1;
+  border: 3px solid #0000;
+  margin-top: 50px;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+
+  &:before {
+    content: "";
+    position: absolute;
+    inset: auto 35% 0;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #ffd000;
+    animation: l6-0 0.5s cubic-bezier(0, 800, 1, 800) infinite;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    outline: 3px solid #ffffff;
+    animation: l6-1 0.5s linear infinite;
+  }
+}

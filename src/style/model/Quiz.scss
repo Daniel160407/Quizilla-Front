@@ -64,6 +64,14 @@
     span:first-child {
       font-size: 1.1rem;
       letter-spacing: 0.5px;
+      
+      &.no-answer::after {
+        content: '*';
+        color: #ff3b30;
+        font-weight: bold;
+        margin-left: 4px;
+        animation: pulse 1s infinite alternate;
+      }
     }
 
     span:last-child {
@@ -134,4 +142,15 @@
     opacity: 1;
     transform: scale(1) translateY(0);
   }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes borderPulse {
+  0% { opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { opacity: 0.3; }
 }

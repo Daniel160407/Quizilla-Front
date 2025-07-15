@@ -1,59 +1,79 @@
+@use '../uiComponents/Loader';
+
 $kahoot-colors: #461a8f, #7b1fa2, #1976d2, #388e3c, #f57c00, #c2185b, #d32f2f, #00796b;
 $white: #ffffff;
 $black: #000000;
 $error-red: #d32f2f;
 $text-light: #f4f4f4;
 $projector-purple: #9c27b0;
+$winner-gold: #ffc107;
 
 .dashboard {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem;
-  margin-top: 50px;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.2rem;
+  padding: 1.5rem;
+  margin-top: 40px;
   background: linear-gradient(135deg, darken(nth($kahoot-colors, 1), 10%) 0%, #2d075a 100%);
   min-height: 100vh;
   font-family: "Arial Rounded MT Bold", "Segoe UI", sans-serif;
   animation: fadeIn 0.5s ease-out forwards;
   position: relative;
 
-  .projector-button {
+  .action-buttons {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: linear-gradient(135deg, $projector-purple 0%, nth($kahoot-colors, 2) 100%);
-    color: $white;
-    border: none;
-    border-radius: 50px;
-    padding: 12px 24px;
+    bottom: 25px;
+    right: 25px;
     display: flex;
-    align-items: center;
     gap: 12px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 6px 20px rgba($black, 0.2);
     z-index: 1000;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 2px solid rgba($white, 0.2);
-    
-    &:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 8px 25px rgba($black, 0.3);
-      background: linear-gradient(135deg, lighten($projector-purple, 5%) 0%, lighten(nth($kahoot-colors, 2), 5%) 100%);
+
+    .projector-button, .winner-stands-button {
+      color: $white;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 5px 18px rgba($black, 0.2);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid rgba($white, 0.15);
+
+      &:hover {
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 0 7px 20px rgba($black, 0.25);
+      }
+
+      &:active {
+        transform: translateY(0) scale(0.97);
+      }
+
+      .button-icon {
+        font-size: 1.3rem;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover .button-icon {
+        transform: rotate(15deg);
+      }
     }
-    
-    &:active {
-      transform: translateY(0) scale(0.98);
+
+    .projector-button {
+      background: linear-gradient(135deg, $projector-purple 0%, nth($kahoot-colors, 2) 100%);
+      &:hover {
+        background: linear-gradient(135deg, lighten($projector-purple, 5%) 0%, lighten(nth($kahoot-colors, 2), 5%) 100%);
+      }
     }
-    
-    .projector-icon {
-      font-size: 1.4rem;
-      transition: transform 0.3s ease;
-    }
-    
-    &:hover .projector-icon {
-      transform: rotate(15deg);
+
+    .winner-stands-button {
+      background: linear-gradient(135deg, $winner-gold 0%, darken($winner-gold, 15%) 100%);
+      &:hover {
+        background: linear-gradient(135deg, lighten($winner-gold, 5%) 0%, darken($winner-gold, 10%) 100%);
+      }
     }
   }
 
@@ -61,7 +81,7 @@ $projector-purple: #9c27b0;
     grid-column: 1 / -1;
     background: rgba($white, 0.9);
     color: $error-red;
-    padding: 1.2rem;
+    padding: 1rem;
     border-radius: 12px;
     text-align: center;
     font-weight: 700;
@@ -73,15 +93,14 @@ $projector-purple: #9c27b0;
 
   .category {
     position: relative;
-    min-height: 400px;
-    border-radius: 24px;
+    min-height: 100px;
+    border-radius: 20px;
     overflow: hidden;
-    cursor: pointer;
-    padding: 20px;
+    padding: 12px;
     transform: scale(1);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 10px 20px rgba($black, 0.19), 0 6px 6px rgba($black, 0.23);
-    animation: cardAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 16px rgba($black, 0.18), 0 5px 5px rgba($black, 0.2);
+    animation: cardAppear 0.5s ease-out forwards;
 
     @for $i from 1 through length($kahoot-colors) {
       &:nth-child(#{length($kahoot-colors)}n + #{$i}) {
@@ -92,25 +111,25 @@ $projector-purple: #9c27b0;
     h2 {
       text-align: center;
       color: $text-light;
-      font-size: 2.2rem;
+      font-size: 1.6rem;
       font-weight: 800;
-      margin-bottom: 1.5rem;
-      text-shadow: 0 2px 8px rgba($black, 0.4);
+      margin-bottom: 0.8rem;
+      text-shadow: 0 1px 4px rgba($black, 0.3);
       transition: transform 0.3s ease;
     }
 
     &:hover {
-      transform: scale(1.05);
-      box-shadow: 0 15px 30px rgba($black, 0.25), 0 10px 10px rgba($black, 0.22);
-      
+      transform: scale(1.03);
+      box-shadow: 0 12px 24px rgba($black, 0.25), 0 6px 8px rgba($black, 0.2);
+
       h2 {
-        transform: translateY(-5px);
+        transform: translateY(-4px);
       }
     }
 
     @for $i from 1 through 10 {
       &:nth-child(#{$i}) {
-        animation-delay: #{$i * 0.1}s;
+        animation-delay: #{$i * 0.08}s;
       }
     }
   }
@@ -119,17 +138,17 @@ $projector-purple: #9c27b0;
     grid-column: 1 / -1;
     text-align: center;
     color: $white;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 700;
-    margin-top: 2rem;
-    text-shadow: 0 2px 4px rgba($black, 0.3);
+    margin-top: 1.5rem;
+    text-shadow: 0 1px 3px rgba($black, 0.3);
   }
 }
 
 @keyframes cardAppear {
   0% {
     opacity: 0;
-    transform: translateY(20px) scale(0.95);
+    transform: translateY(15px) scale(0.97);
   }
   100% {
     opacity: 1;
@@ -138,38 +157,52 @@ $projector-purple: #9c27b0;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (max-width: 768px) {
   .dashboard {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    padding: 1.5rem;
+    padding: 1rem;
     margin-top: 20px;
 
-    .projector-button {
+    .action-buttons {
       bottom: 20px;
       right: 20px;
-      padding: 10px 18px;
-      font-size: 1rem;
-      
-      .projector-icon {
-        font-size: 1.2rem;
+      flex-direction: column;
+      gap: 10px;
+
+      .projector-button, .winner-stands-button {
+        padding: 10px 16px;
+        font-size: 1rem;
+
+        .button-icon {
+          font-size: 1.2rem;
+        }
       }
     }
 
     .category {
-      min-height: 350px;
-      padding: 15px;
-      
+      min-height: 260px;
+      padding: 10px;
+
       h2 {
-        font-size: 1.8rem;
+        font-size: 1.4rem;
+        margin-bottom: 0.6rem;
       }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+
+    .action-buttons {
+      width: calc(100% - 40px);
+      flex-direction: row;
+      justify-content: center;
     }
   }
 }

@@ -1,0 +1,38 @@
+.loader {
+  height: 60px;
+  aspect-ratio: 1;
+  border: 3px solid #0000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+
+  &:before {
+    content: "";
+    position: absolute;
+    inset: auto 35% 0;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #ffd000;
+    animation: l6-0 0.5s cubic-bezier(0, 800, 1, 800) infinite;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    outline: 3px solid #ffffff;
+    animation: l6-1 0.5s linear infinite;
+  }
+}
+
+@keyframes l6-0 {
+  0%, 2% { bottom: 0% }
+  98%, 100% { bottom: 0.1% }
+}
+
+@keyframes l6-1 {
+  0%, 30% { rotate: 0deg }
+  70%, 100% { rotate: 90deg }
+}

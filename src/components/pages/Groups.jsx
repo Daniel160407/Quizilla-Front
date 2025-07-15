@@ -12,10 +12,12 @@ const Groups = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [broadcastChannel, setBroadcastChannel] = useState(null);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const wsManager = useRef(null);
 
   useEffect(() => {
+    fetchGroups();
     const channel = new BroadcastChannel("quiz_channel");
     setBroadcastChannel(channel);
 
@@ -46,6 +48,7 @@ const Groups = () => {
   };
 
   const initializeWebSocket = () => {
+    setLoading(true);
     wsManager.current = new WebSocketManager("/socket");
 
     wsManager.current.connect();
@@ -67,7 +70,7 @@ const Groups = () => {
     wsManager.current.addConnectionListener("open", () => {
       setIsConnected(true);
       setError(null);
-      fetchGroups();
+      setLoading(false);
     });
 
     wsManager.current.addConnectionListener("close", () => {
@@ -94,8 +97,6 @@ const Groups = () => {
   const handleClick = () => {
     setShowInstructions(!showInstructions);
 
-    console.log(!showInstructions);
-    
     setTimeout(() => {
       broadcastChannel.postMessage({
         type: "SHOW_INSTRUCTIONS",
@@ -114,9 +115,9 @@ const Groups = () => {
           <h2>Groups Management</h2>
         </div>
         <div className="admin-groups-content">
-          {error && <div className="error">{error}</div>}
           <div className="groups-list-section">
             <GroupsList groups={allGroups} />
+            {loading && <div className="loader"></div>}
           </div>
         </div>
       </div>

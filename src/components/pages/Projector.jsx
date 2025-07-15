@@ -5,6 +5,7 @@ import ProjectorQuizList from "../lists/ProjectorQuizList";
 import ProjectorQuestion from "../model/ProjectorQuestion";
 import Instructions from "./Instructions";
 import WebSocketManager from "../hooks/WebSocketManager";
+import WinnerStands from "./WinnerStands";
 
 const Projector = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -17,6 +18,8 @@ const Projector = () => {
   const [playersAnswered, setPlayersAnswered] = useState([]);
   const [showInstructions, setShowInstructions] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [showWinnerStands, setShowWinnerStands] = useState(false);
+  const [groups, setGroups] = useState([]);
 
   const wsManager = useRef(null);
   const reconnectAttempts = useRef(0);
@@ -33,7 +36,7 @@ const Projector = () => {
           setShowQuestion(true);
           break;
         case "QUIZ_CANCELED":
-          setSelectedQuiz(prev => ({...prev, enabled: 1}));
+          setSelectedQuiz((prev) => ({ ...prev, enabled: 1 }));
           setShowQuestion(false);
           setPlayersAnswered([]);
           break;
@@ -42,6 +45,10 @@ const Projector = () => {
           break;
         case "SHOW_INSTRUCTIONS":
           setShowInstructions(event.data.payload);
+          break;
+        case "SHOW_WINNER_STANDS":
+          setGroups(event.data.payload);
+          setShowWinnerStands(!showWinnerStands);
           break;
       }
     };
@@ -72,7 +79,7 @@ const Projector = () => {
       setLoading(true);
       const [quizzesRes, categoriesRes] = await Promise.all([
         useAxios("/quiz", "get"),
-        useAxios("/category", "get")
+        useAxios("/category", "get"),
       ]);
       setQuizzes(quizzesRes.data);
       setCategories(categoriesRes.data);
@@ -101,8 +108,8 @@ const Projector = () => {
       setIsConnected(false);
       if (reconnectAttempts.current < maxReconnectAttempts) {
         const delay = Math.min(3000 * (reconnectAttempts.current + 1), 15000);
-        setError(`Connection lost. Reconnecting in ${delay/1000} seconds...`);
-        
+        setError(`Connection lost. Reconnecting in ${delay / 1000} seconds...`);
+
         setTimeout(() => {
           reconnectAttempts.current += 1;
           initializeWebSocket();
@@ -142,7 +149,7 @@ const Projector = () => {
     sendWebSocketMessage({
       sender: "projector",
       type: "QUESTION_CANCEL",
-      payload: selectedQuiz.id || ""
+      payload: selectedQuiz.points
     });
   };
 
@@ -150,7 +157,7 @@ const Projector = () => {
     sendWebSocketMessage({
       sender: "projector",
       type: "QUIZ_START",
-      payload: selectedQuiz.id || ""
+      payload: JSON.stringify(selectedQuiz),
     });
   };
 
@@ -163,7 +170,11 @@ const Projector = () => {
           onTimeUp={handleTimeUp}
           quizStarted={handleQuizStarted}
         />
-      ) : !showInstructions ? (
+      ) : showWinnerStands ? (
+        <WinnerStands groups={groups} />
+      ) : showInstructions ? (
+        <Instructions />
+      ) : (
         <div className="projector-dashboard">
           {error && <p className="error">{error}</p>}
           {loading ? (
@@ -172,15 +183,13 @@ const Projector = () => {
             categories.map((category) => (
               <div key={category.id} className="category">
                 <h2>{category.name}</h2>
-                <ProjectorQuizList 
-                  quizzes={quizzes.filter(q => q.categoryId === category.id)} 
+                <ProjectorQuizList
+                  quizzes={quizzes.filter((q) => q.categoryId === category.id)}
                 />
               </div>
             ))
           )}
         </div>
-      ) : (
-        <Instructions />
       )}
     </>
   );

@@ -33,7 +33,7 @@ const DashboardQuiz = ({ quiz, index, onClick }) => {
         <span className="toggle-track">
           <span className="toggle-thumb" />
         </span>
-        <span className="toggle-label">{isEnabled ? "ON" : "OFF"}</span>
+        <span className="toggle-label"></span>
       </button>
     </div>
   );

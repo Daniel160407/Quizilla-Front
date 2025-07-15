@@ -1,13 +1,13 @@
 .groups-answered {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-height: 400px;
-  min-height: 300px;
-  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // 2 columns
+  grid-auto-rows: minmax(60px, auto);
+  gap: 1rem 2rem;
+  max-height: 100%;
   padding: 1rem;
   scrollbar-width: thin;
   scrollbar-color: #4a6fa5 #f0f0f0;
+  overflow-y: auto;
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -92,13 +92,13 @@
   }
 
   @media (max-width: 768px) {
-    padding: 0.5rem;
-    
+    grid-template-columns: 1fr;
+
     .group-answered {
       padding: 1rem;
-      
+
       p {
-        font-size: 1rem;
+        font-size: 1.2rem;
       }
     }
   }
@@ -106,10 +106,10 @@
   @media (max-width: 480px) {
     .group-answered {
       padding: 0.75rem;
-      
+
       p {
-        font-size: 0.9rem;
-        
+        font-size: 1rem;
+
         &::before {
           margin-right: 0.5rem;
         }

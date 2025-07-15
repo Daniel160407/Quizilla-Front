@@ -4,7 +4,7 @@ import '../../style/forms/QuizForm.scss';
 const QuizForm = ({ types, categoryId, onSubmit }) => {
   const [formData, setFormData] = useState({
     categoryId,
-    type: "",
+    type: "A",
     question: "",
     answer: "",
     mediaUrl: "",

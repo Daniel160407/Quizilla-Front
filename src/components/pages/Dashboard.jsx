@@ -4,8 +4,9 @@ import useAxios from "../hooks/UseAxios";
 import "../../style/pages/Dashboard.scss";
 import DashboardQuizList from "../lists/DashboardQuizList";
 import Question from "../model/Question";
-import { FaDesktop } from "react-icons/fa";
+import { FaDesktop, FaTrophy } from "react-icons/fa";
 import WebSocketManager from "../hooks/WebSocketManager";
+import GroupsList from "../lists/GroupsList";
 
 const Dashboard = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -16,17 +17,15 @@ const Dashboard = () => {
   const [selectedQuiz, setSelectedQuiz] = useState({});
   const [projectorWindow, setProjectorWindow] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [groups, setGroups] = useState([]);
 
   const wsManager = useRef(null);
   const broadcastChannel = useRef(null);
 
   useEffect(() => {
-    // Initialize WebSocket and BroadcastChannel
     const initializeComponents = () => {
-      // Create BroadcastChannel first
       broadcastChannel.current = new BroadcastChannel("quiz_channel");
-      
-      // Set up message handler
+
       broadcastChannel.current.onmessage = (event) => {
         switch (event.data.type) {
           case "QUESTION_CANCEL":
@@ -38,7 +37,6 @@ const Dashboard = () => {
         }
       };
 
-      // Initialize WebSocket if not already done
       if (!wsManager.current) {
         initializeWebSocket();
       }
@@ -47,7 +45,6 @@ const Dashboard = () => {
     initializeComponents();
 
     return () => {
-      // Cleanup function
       if (wsManager.current) {
         wsManager.current.disconnect();
       }
@@ -64,7 +61,7 @@ const Dashboard = () => {
           setLoading(true);
           const [quizzesResponse, categoriesResponse] = await Promise.all([
             useAxios("/quiz", "get"),
-            useAxios("/category", "get")
+            useAxios("/category", "get"),
           ]);
           setQuizzes(quizzesResponse.data);
           setCategories(categoriesResponse.data);
@@ -87,7 +84,10 @@ const Dashboard = () => {
       try {
         switch (message.type) {
           case "PLAYER_ANSWERED":
-            handlePlayerAnswered(message.payload);
+            handlePlayerAnswered(JSON.parse(message.payload));
+            break;
+          case "QUESTION_CANCEL":
+            setGroups(JSON.parse(message.payload));
             break;
           default:
             console.warn("Unhandled message type:", message.type);
@@ -100,7 +100,6 @@ const Dashboard = () => {
     wsManager.current.addConnectionListener("open", () => {
       setIsConnected(true);
       setError(null);
-      console.log("WebSocket connected");
     });
 
     wsManager.current.addConnectionListener("close", () => {
@@ -120,16 +119,19 @@ const Dashboard = () => {
     });
   };
 
-  const handlePlayerAnswered = (groupName) => {
-    if (!broadcastChannel.current) {
-      console.error("BroadcastChannel not initialized");
-      return;
-    }
-    
+  const handlePlayerAnswered = (updatedGroup) => {
+    setGroups((prevGroups) =>
+      prevGroups.map((group) =>
+        group.name === updatedGroup.name ? updatedGroup : group
+      )
+    );
+
+    if (!broadcastChannel.current) return;
+
     try {
       broadcastChannel.current.postMessage({
         type: "PLAYER_ANSWERED",
-        payload: groupName,
+        payload: updatedGroup.name,
       });
     } catch (e) {
       console.error("Error posting message to BroadcastChannel:", e);
@@ -139,7 +141,6 @@ const Dashboard = () => {
   const handleQuizClick = (quiz) => {
     setSelectedQuiz(quiz);
     setShowQuestion(true);
-    
     useAxios(`/quiz/enable?id=${quiz.id}&enable=${false}`, "put");
 
     if (broadcastChannel.current) {
@@ -158,7 +159,7 @@ const Dashboard = () => {
 
   const handleBackToDashboard = () => {
     setShowQuestion(false);
-    
+
     setTimeout(() => {
       if (broadcastChannel.current) {
         broadcastChannel.current.postMessage({
@@ -168,14 +169,6 @@ const Dashboard = () => {
       }
     }, 1000);
 
-    wsManager.current.send({
-      sender: "admin",
-      type: "QUESTION_CANCEL",
-      payload: "",
-    });
-  };
-
-  const handleTimeUp = () => {
     wsManager.current.send({
       sender: "admin",
       type: "QUESTION_CANCEL",
@@ -207,23 +200,53 @@ const Dashboard = () => {
     }
   };
 
+  const openWinnerStands = async () => {
+    const fetchGroups = async () => {
+      const response = await useAxios("/group", "get");
+      return response.data;
+    };
+
+    const groups = await fetchGroups();
+
+    setTimeout(() => {
+      if (broadcastChannel.current) {
+        broadcastChannel.current.postMessage({
+          type: "SHOW_WINNER_STANDS",
+          payload: groups,
+        });
+      }
+    }, 1000);
+  };
+
   return (
     <>
       <Navbar />
       {showQuestion ? (
-        <Question quiz={selectedQuiz} onBack={handleBackToDashboard} />
+        <>
+          <Question quiz={selectedQuiz} onBack={handleBackToDashboard} />
+          <GroupsList groups={groups} mode={'light'} />
+        </>
       ) : (
         <div className="dashboard">
-          <button
-            className="projector-button"
-            onClick={openProjector}
-            title="Open Projector View"
-          >
-            <FaDesktop className="projector-icon" />
-            <span>Projector View</span>
-          </button>
-
-          {error && <p className="error">{error}</p>}
+          <div className="action-buttons">
+            <button
+              className="projector-button"
+              onClick={openProjector}
+              title="Open Projector View"
+            >
+              <FaDesktop className="button-icon" />
+              <span>Projector View</span>
+            </button>
+            <button
+              className="winner-stands-button"
+              onClick={openWinnerStands}
+              title="Winner Stands"
+            >
+              <FaTrophy className="button-icon" />
+              <span>Winner Stands</span>
+            </button>
+          </div>
+          {!isConnected && <div className="loader"></div>}
           {loading ? (
             <p>Loading...</p>
           ) : (

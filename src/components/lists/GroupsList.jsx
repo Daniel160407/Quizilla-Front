@@ -1,11 +1,10 @@
 import "../../style/lists/GroupsList.scss";
 
-const GroupsList = ({ groups }) => {
-  // Find max points
+const GroupsList = ({ groups, mode }) => {
   const maxPoints = Math.max(...groups.map(group => group.points || 0));
-  
+
   return (
-    <div className="groups-list">
+    <div className={`groups-list ${mode}`}>
       {groups.map((group) => (
         <div 
           key={group.id}

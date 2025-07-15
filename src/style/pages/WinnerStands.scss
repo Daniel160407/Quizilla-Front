@@ -1,0 +1,58 @@
+.winner-stands {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 400px;
+  gap: 40px;
+  margin-top: 40px;
+  position: relative;
+
+  .podium {
+    width: 140px;
+    background: #612897;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    padding: 10px;
+    transition: all 0.5s ease;
+    opacity: 0;
+    transform: translateY(100px);
+    
+    h2 {
+      margin: 10px 0 5px;
+      font-size: 20px;
+    }
+
+    p {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .medal {
+      font-size: 36px;
+      margin-bottom: 5px;
+    }
+  }
+
+  &.animate .podium {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .first {
+    height: 220px;
+    background: #f2c94c;
+    margin-top: -60px;
+  }
+
+  .second {
+    height: 180px;
+    background: #bdbdbd;
+    margin-top: -30px;
+  }
+
+  .third {
+    height: 140px;
+    background: #cd7f32;
+  }
+}

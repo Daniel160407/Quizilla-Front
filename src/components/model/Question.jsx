@@ -7,7 +7,7 @@ const Question = ({ quiz, onBack }) => {
   const [answers, setAnswers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState(
-    quiz.type === "A" ? 30 : quiz.type === "B" ? 20 : 10
+    quiz.type === "C" ? 30 : quiz.type === "B" ? 20 : 10
   );
 
   useEffect(() => {

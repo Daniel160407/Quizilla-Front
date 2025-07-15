@@ -18,6 +18,8 @@ const Client = () => {
   const [quiz, setQuiz] = useState({});
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isDisconnected, setIsDisconnected] = useState(false);
 
   const wsManager = useRef(null);
 
@@ -29,7 +31,6 @@ const Client = () => {
       };
 
       initializeWebSocket();
-
       fetchGroups();
     }
 
@@ -70,6 +71,9 @@ const Client = () => {
   }, [characterName]);
 
   const initializeWebSocket = (onConnected) => {
+    setLoading(true);
+    setIsDisconnected(false);
+
     if (wsManager.current) {
       wsManager.current.disconnect();
     }
@@ -78,13 +82,14 @@ const Client = () => {
     wsManager.current.connect();
 
     wsManager.current.addMessageHandler((message) => {
-      const parsedPayload = message.payload !== '' ? JSON.parse(message.payload) : '';
+      const parsedPayload =
+        message.payload !== "" ? JSON.parse(message.payload) : "";
+
       switch (message.type) {
         case "GROUP_CREATED":
           handleGroupCreated(message);
           break;
         case "QUESTION":
-          console.log(parsedPayload);
           setQuiz(parsedPayload);
           setShowQuiz(true);
           break;
@@ -101,8 +106,32 @@ const Client = () => {
 
     wsManager.current.addConnectionListener("open", () => {
       console.log("WebSocket connected");
+      setIsDisconnected(false);
+      setLoading(false);
       if (onConnected) onConnected();
     });
+
+    wsManager.current.addConnectionListener("close", () => {
+      console.warn("WebSocket disconnected. Trying to reconnect...");
+      setIsDisconnected(true);
+      setLoading(false);
+      retryConnection();
+    });
+
+    wsManager.current.addConnectionListener("error", (err) => {
+      console.error("WebSocket error:", err);
+      setIsDisconnected(true);
+      setLoading(false);
+      retryConnection();
+    });
+  };
+
+  const retryConnection = () => {
+    setTimeout(() => {
+      if (!wsManager.current?.isConnected?.()) {
+        initializeWebSocket();
+      }
+    }, 3000);
   };
 
   const handleGroupCreated = (message) => {
@@ -137,6 +166,12 @@ const Client = () => {
 
   return (
     <div className="client">
+      {isDisconnected && (
+        <div className="ws-disconnected">
+          Connection lost. Reconnecting...
+        </div>
+      )}
+      {loading && <div className="loader"></div>}
       {showForm && groupName === "" && (
         <ClientGroupForm onSubmit={handleSubmit} />
       )}
@@ -148,7 +183,11 @@ const Client = () => {
       )}
       {groupName !== "" && !showQuiz && <GroupsList groups={allGroups} />}
       {showQuiz && (
-        <ClientQuestion quiz={quiz} onAnswerSelection={onAnswerSelection} quizStarted={quizStarted} />
+        <ClientQuestion
+          quiz={quiz}
+          onAnswerSelection={onAnswerSelection}
+          quizStarted={quizStarted}
+        />
       )}
     </div>
   );

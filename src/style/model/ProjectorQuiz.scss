@@ -11,6 +11,7 @@ $toggle-on: #4CAF50;
 $toggle-off: #d32f2f;
 $toggle-track: #3a3a4a;
 $toggle-thumb: #f5f5f5;
+$white: #f4f4f4;
 
 @keyframes fadeIn {
   from {
@@ -23,11 +24,11 @@ $toggle-thumb: #f5f5f5;
   }
 }
 
-.dashboard-quiz {
+.projector-quiz {
   background: $dark-card;
   border-radius: 10px;
-  padding: 0.6rem 1rem; // reduced
-  margin-bottom: 0.7rem; // reduced
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.7rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -67,21 +68,35 @@ $toggle-thumb: #f5f5f5;
     &::before {
       background: linear-gradient(to bottom, $disabled-color, darken($disabled-color, 8%));
     }
+
+    .quiz-points {
+      background: $disabled-color;
+      color: #eee;
+    }
   }
 
-  p {
-    color: $text-light;
-    font-weight: 600;
-    font-size: 1rem; // reduced
-    margin: 0;
-    position: relative;
-    flex-grow: 1;
+  .quiz-label {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 
-    &::before {
-      position: absolute;
-      left: 0;
-      color: $purple-main;
+    .quiz-index {
+      color: $text-light;
+      font-weight: 600;
       font-size: 1rem;
+    }
+
+    .quiz-points {
+      background: $purple-light;
+      color: $white;
+      padding: 0.25rem 0.4rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      white-space: nowrap;
     }
   }
 
@@ -92,7 +107,7 @@ $toggle-thumb: #f5f5f5;
     border: none;
     background: transparent;
     cursor: pointer;
-    padding: 0.2rem 0.4rem; // reduced
+    padding: 0.2rem 0.4rem;
     margin-left: 0.8rem;
     border-radius: 20px;
     transition: all 0.3s ease;
@@ -168,8 +183,19 @@ $toggle-thumb: #f5f5f5;
   .dashboard-quiz {
     padding: 0.6rem 0.8rem;
 
-    p {
-      font-size: 0.95rem;
+    .quiz-label {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.3rem;
+
+      .quiz-index {
+        font-size: 0.95rem;
+      }
+
+      .quiz-points {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.5rem;
+      }
     }
 
     .enable-toggle {

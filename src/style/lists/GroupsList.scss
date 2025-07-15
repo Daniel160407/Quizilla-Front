@@ -8,6 +8,47 @@ $kahoot-accent: #f72585;
 $kahoot-gold: #ffd700;
 $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
 $gold-glow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.4);
+$light-bg: #f7f7f9;
+$light-card-bg: #ffffff;
+$light-border: #ccc;
+$light-text: #333;
+
+.groups-list.light {
+  background: $light-bg;
+
+  .group-card {
+    background: $light-card-bg;
+    border: 1px solid $light-border;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    .group-info {
+      background: #f0f0f0;
+
+      .group-name {
+        color: $light-text;
+      }
+
+      .group-points {
+        background: #e0e0e0;
+        color: $light-text;
+
+        .points-value {
+          color: #555;
+        }
+      }
+    }
+
+    &:hover {
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      transform: translateY(-5px);
+    }
+
+    &.leader {
+      border: 2px solid $kahoot-gold;
+      box-shadow: $gold-glow;
+    }
+  }
+}
 
 .groups-list {
   display: grid;
@@ -21,15 +62,6 @@ $gold-glow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.4);
   border-radius: 16px;
   font-family: 'Nunito', sans-serif;
   perspective: 1000px;
-
-  .group-card.new-group {
-    animation: cardEntry 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
-    @for $i from 1 through 12 {
-      &:nth-child(#{$i}) {
-        animation-delay: 0.1s * $i;
-      }
-    }
-  }
 
   .group-card {
     border-radius: 12px;
@@ -50,9 +82,7 @@ $gold-glow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.4);
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at center, 
-                rgba(123, 44, 191, 0.15) 0%, 
-                rgba(26, 16, 61, 0) 70%);
+      background: radial-gradient(circle at center, rgba(123, 44, 191, 0.15) 0%, rgba(26, 16, 61, 0) 70%);
       opacity: 0;
       transition: opacity 0.5s ease;
     }
@@ -86,7 +116,7 @@ $gold-glow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.4);
       border: 3px solid $kahoot-blue;
       box-shadow: 0 0 15px rgba(76, 201, 240, 0.7);
 
-      .group-points .points-value {
+      .points-value {
         color: $kahoot-blue;
       }
     }
@@ -99,6 +129,7 @@ $gold-glow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.4);
       z-index: 10;
 
       &::after {
+        content: '';
         position: absolute;
         top: -10px;
         right: -10px;
@@ -115,7 +146,7 @@ $gold-glow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.4);
         box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
       }
 
-      .group-points .points-value {
+      .points-value {
         color: $kahoot-gold;
       }
 
@@ -161,10 +192,7 @@ $gold-glow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.4);
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, 
-                  $kahoot-purple 0%, 
-                  $kahoot-pink 50%, 
-                  $kahoot-blue 100%);
+        background: linear-gradient(90deg, $kahoot-purple 0%, $kahoot-pink 50%, $kahoot-blue 100%);
         transform: scaleX(0);
         transform-origin: left;
         transition: transform 0.5s ease;
@@ -244,52 +272,18 @@ $gold-glow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.4);
 }
 
 @keyframes goldPulse {
-  0% { 
+  0% {
     box-shadow: $gold-glow, 0 0 0 0 rgba(255, 215, 0, 0.7);
     transform: scale(1);
   }
-  50% { 
+  50% {
     box-shadow: $gold-glow, 0 0 0 10px rgba(255, 215, 0, 0);
     transform: scale(1.02);
   }
-  100% { 
+  100% {
     box-shadow: $gold-glow, 0 0 0 0 rgba(255, 215, 0, 0);
     transform: scale(1);
   }
-}
-
-@keyframes celebrate {
-  0% { transform: scale(1); }
-  15% { transform: scale(1.2); }
-  30% { transform: scale(0.95); }
-  45% { transform: scale(1.1); }
-  60% { transform: scale(0.98); }
-  75% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-.group-card.highlight-new {
-  animation: cardEntry 0.8s ease-out both, celebrate 1.5s 0.8s ease-in-out both;
-  
-  &::after {
-    content: 'NEW';
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: $kahoot-pink;
-    color: white;
-    font-weight: 800;
-    padding: 3px 8px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    z-index: 3;
-    animation: blink 1.5s infinite alternate;
-  }
-}
-
-@keyframes blink {
-  from { opacity: 0.7; }
-  to { opacity: 1; }
 }
 
 @media (max-width: 768px) {
@@ -297,16 +291,6 @@ $gold-glow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.4);
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 20px;
     padding: 20px;
-    
-    .group-card {
-      .group-info {
-        padding: 15px 10px;
-        
-        .group-name {
-          font-size: 1.1rem;
-        }
-      }
-    }
   }
 }
 

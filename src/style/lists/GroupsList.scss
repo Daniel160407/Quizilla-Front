@@ -244,6 +244,49 @@ $light-text: #333;
           letter-spacing: 1px;
         }
       }
+
+      .group-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 15px;
+
+        button {
+          background: rgba(255, 255, 255, 0.1);
+          border: none;
+          border-radius: 50%;
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          color: white;
+
+          &:hover {
+            transform: scale(1.1);
+          }
+
+          &.edit-btn {
+            background: rgba($kahoot-blue, 0.2);
+
+            &:hover {
+              background: rgba($kahoot-blue, 0.4);
+              box-shadow: 0 0 10px rgba($kahoot-blue, 0.5);
+            }
+          }
+
+          &.delete-btn {
+            background: rgba($kahoot-pink, 0.2);
+
+            &:hover {
+              background: rgba($kahoot-pink, 0.4);
+              box-shadow: 0 0 10px rgba($kahoot-pink, 0.5);
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -299,5 +342,17 @@ $light-text: #333;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 15px;
     padding: 15px;
+
+    .group-card {
+      &.editing {
+        .form-actions {
+          flex-direction: column;
+          
+          button {
+            width: 100%;
+          }
+        }
+      }
+    }
   }
 }

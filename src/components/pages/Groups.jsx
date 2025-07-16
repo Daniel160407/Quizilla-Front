@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import WebSocketManager from "../hooks/WebSocketManager";
 import GroupsList from "../lists/GroupsList";
 import useAxios from "../hooks/UseAxios";
@@ -105,6 +105,21 @@ const Groups = () => {
     }, 1000);
   };
 
+  const handleGroupEdit = async (group) => {
+    const response = await useAxios("/group", "put", group);
+    setAllGroups(response.data);
+  };
+
+  const handleGroupDelete = async (groupId) => {
+    const response = await useAxios(`/group?id=${groupId}`, "delete");
+    setAllGroups(response.data);
+  };
+
+  const handleClearAllPoints = async () => {
+    const response = await useAxios("/group/clear", "put");
+    setAllGroups(response.data);
+  };
+
   return (
     <>
       <Navbar />
@@ -114,9 +129,18 @@ const Groups = () => {
         <div className="admin-groups-header">
           <h2>Groups Management</h2>
         </div>
+        <button className="clear-all" onClick={handleClearAllPoints}>
+          Clear Points
+        </button>
+
         <div className="admin-groups-content">
           <div className="groups-list-section">
-            <GroupsList groups={allGroups} />
+            <GroupsList
+              groups={allGroups}
+              onEditGroup={handleGroupEdit}
+              onDeleteGroup={handleGroupDelete}
+              onClearAll={handleClearAllPoints}
+            />
             {loading && <div className="loader"></div>}
           </div>
         </div>

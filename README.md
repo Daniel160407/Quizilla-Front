@@ -1,12 +1,41 @@
-# React + Vite
+# 🎉 Quizilla! - The Ultimate Multiplayer Quiz Experience 🧠
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to **Quizilla!** — a fun, colorful, and interactive quiz game built to engage, challenge, and entertain! Whether you're a teacher, event host, or trivia lover, Quizilla is your go-to platform for real-time multiplayer quizzing.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- 🔢 **Multiple Question Types** – Multiple choice, true/false, and more!
+- 🧑‍🤝‍🧑 **Multiplayer Ready** – Join with a group, choose your avatar, and battle it out!
+- 🎥 **Projector Mode** – Display questions and podiums live in real-time.
+- 🔌 **WebSocket Integration** – Lightning-fast responses for real-time gameplay.
+- 🎨 **Stylish Interface** – Neon-inspired modern UI with light/dark mode support.
+- 💾 **Admin Panel** – Manage questions, categories, and game settings with ease.
+- 📺 **Video Support** – Embed YouTube videos into questions for more interactive quizzes.
+- 📊 **Dynamic Scoring System** – Points based on response time and difficulty.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🖥️ Tech Stack
+
+- **Frontend:** React, SCSS, WebSockets
+- **Backend:** Spring Boot (Java)
+- **Database:** MySQL
+- **Others:** Axios, React Router, Styled Components
+
+---
+
+### Backend (Spring Boot)
+Repository: [Quizilla-Back](https://github.com/Daniel160407/Quizilla-Back)
+
+
+## Screenshots
+![App Screenshot](public/images/screens/screen1.png)
+![App Screenshot](public/images/screens/screen2.png)
+![App Screenshot](public/images/screens/screen3.png)
+![App Screenshot](public/images/screens/screen4.png)
+![App Screenshot](public/images/screens/screen5.png)
+![App Screenshot](public/images/screens/screen6.png)
+![App Screenshot](public/images/screens/screen7.png)
+![App Screenshot](public/images/screens/screen8.png)

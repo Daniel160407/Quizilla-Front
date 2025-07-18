@@ -4,7 +4,6 @@
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   padding: 1rem 0;
 
-  // Kahoot-inspired color palette
   $quiz-colors: #7b1fa2, #1976d2, #388e3c, #f57c00, #c2185b, #d32f2f, #00796b;
   $total-colors: length($quiz-colors);
 
@@ -38,7 +37,6 @@
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
-    // Optional white fade overlay on hover
     &::after {
       content: "";
       position: absolute;
@@ -56,12 +54,10 @@
     }
   }
 
-  // Color assignment with looping pattern
   @for $i from 1 through 100 {
     > div:nth-child(#{$i}) {
       background: nth($quiz-colors, ($i - 1) % $total-colors + 1);
 
-      // Optional: Darker bottom border
       border-bottom: 4px
         solid
         darken(nth($quiz-colors, ($i - 1) % $total-colors + 1), 10%);

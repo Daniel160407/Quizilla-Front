@@ -181,7 +181,7 @@ const Client = () => {
           setCharacterName={setCharacterName}
         />
       )}
-      {groupName !== "" && !showQuiz && <GroupsList groups={allGroups} />}
+      {groupName !== "" && !showQuiz && <GroupsList groups={allGroups} adminMode={false} />}
       {showQuiz && (
         <ClientQuestion
           quiz={quiz}

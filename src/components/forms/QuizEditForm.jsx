@@ -51,7 +51,7 @@ const QuizEditForm = ({
   return (
     <form className="quiz-form" onSubmit={handleSubmit}>
       <label>
-        Type:
+        Difficulty:
         <select
           name="type"
           value={formData.type}

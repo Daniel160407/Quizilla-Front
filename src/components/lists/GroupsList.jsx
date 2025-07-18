@@ -3,7 +3,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import "../../style/lists/GroupsList.scss";
 import GroupForm from "../forms/GroupForm";
 
-const GroupsList = ({ groups, mode, onEditGroup, onDeleteGroup }) => {
+const GroupsList = ({ groups, mode, onEditGroup, onDeleteGroup, adminMode }) => {
   const [editingId, setEditingId] = useState(null);
   const maxPoints = Math.max(...groups.map((group) => group.points || 0));
 
@@ -18,7 +18,7 @@ const GroupsList = ({ groups, mode, onEditGroup, onDeleteGroup }) => {
   };
 
   return (
-    <div className={`groups-list ${mode}`}>
+    <div className={`groups-list dark ${mode}`}>
       {groups.map((group) =>
         editingId === group.id ? (
           <GroupForm
@@ -48,7 +48,8 @@ const GroupsList = ({ groups, mode, onEditGroup, onDeleteGroup }) => {
                 <span className="points-value">{group.points || 0}</span>
                 <span className="points-label">points</span>
               </div>
-              <div className="group-actions">
+              {adminMode && (
+                <div className="group-actions">
                 <button
                   className="edit-btn"
                   onClick={() => setEditingId(group.id)}
@@ -62,6 +63,7 @@ const GroupsList = ({ groups, mode, onEditGroup, onDeleteGroup }) => {
                   <FaTrash />
                 </button>
               </div>
+              )}
             </div>
           </div>
         )

@@ -139,7 +139,7 @@ const Groups = () => {
               groups={allGroups}
               onEditGroup={handleGroupEdit}
               onDeleteGroup={handleGroupDelete}
-              onClearAll={handleClearAllPoints}
+              adminMode={true}
             />
             {loading && <div className="loader"></div>}
           </div>

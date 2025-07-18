@@ -29,7 +29,7 @@ const QuizForm = ({ types, categoryId, onSubmit }) => {
   return (
     <form className="quiz-form" onSubmit={handleSubmit}>
       <label>
-        Type:
+        Difficulty:
         <select
           name="type"
           className="typeSelector"

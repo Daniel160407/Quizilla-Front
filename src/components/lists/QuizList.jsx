@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Quiz from "../model/Quiz";
 import "../../style/lists/QuizList.scss";
-import useAxios from "../hooks/UseAxios";
 
 const QuizList = ({ quizzes, onEdit, onDelete }) => {
   const [types, setTypes] = useState([]);

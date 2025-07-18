@@ -14,6 +14,7 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showQuestion, setShowQuestion] = useState(false);
+  const [showWinnerStands, setShowWinnerStands] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState({});
   const [projectorWindow, setProjectorWindow] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -208,12 +209,15 @@ const Dashboard = () => {
 
     const groups = await fetchGroups();
 
+    console.log(!showWinnerStands);
     setTimeout(() => {
       if (broadcastChannel.current) {
         broadcastChannel.current.postMessage({
           type: "SHOW_WINNER_STANDS",
           payload: groups,
+          show: !showWinnerStands,
         });
+        setShowWinnerStands(!showWinnerStands);
       }
     }, 1000);
   };

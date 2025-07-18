@@ -47,8 +47,9 @@ const Projector = () => {
           setShowInstructions(event.data.payload);
           break;
         case "SHOW_WINNER_STANDS":
+          console.log(event.data.show)
           setGroups(event.data.payload);
-          setShowWinnerStands(!showWinnerStands);
+          setShowWinnerStands(event.data.show);
           break;
       }
     };

@@ -5,7 +5,7 @@ import ProjectorQuizList from "../lists/ProjectorQuizList";
 import ProjectorQuestion from "../model/ProjectorQuestion";
 import Instructions from "./Instructions";
 import WebSocketManager from "../hooks/WebSocketManager";
-import WinnerStands from "./WinnerStands";
+import Podium from "./Podium";
 
 const Projector = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -172,7 +172,7 @@ const Projector = () => {
           quizStarted={handleQuizStarted}
         />
       ) : showWinnerStands ? (
-        <WinnerStands groups={groups} />
+        <Podium groups={groups} />
       ) : showInstructions ? (
         <Instructions />
       ) : (

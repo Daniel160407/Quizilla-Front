@@ -247,7 +247,7 @@ const Dashboard = () => {
               title="Winner Stands"
             >
               <FaTrophy className="button-icon" />
-              <span>Winner Stands</span>
+              <span>Podium</span>
             </button>
           </div>
           {!isConnected && <div className="loader"></div>}

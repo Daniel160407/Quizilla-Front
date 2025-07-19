@@ -1,23 +1,54 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../../style/pages/WinnerStands.scss";
 
 const WinnerStands = ({ groups }) => {
   const [winners, setWinners] = useState([]);
   const [animateEntrance, setAnimateEntrance] = useState(false);
   const [visibleWinners, setVisibleWinners] = useState([]);
+  const [audioLoaded, setAudioLoaded] = useState(false);
+  const [musicPlayed, setMusicPlayed] = useState(false);
+  const audioRef = useRef(null);
 
   useEffect(() => {
-    if (!groups || groups.length === 0) return;
+    if (audioRef.current) {
+      const handleCanPlay = () => {
+        setAudioLoaded(true);
+      };
 
-    const sortedGroups = [...groups].sort((a, b) => b.points - a.points).slice(0, 3);
+      const audioElement = audioRef.current;
+      audioElement.addEventListener("canplaythrough", handleCanPlay);
+
+      return () => {
+        if (audioElement) {
+          audioElement.removeEventListener("canplaythrough", handleCanPlay);
+        }
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!groups || groups.length === 0 || !audioLoaded) return;
+
+    const sortedGroups = [...groups]
+      .sort((a, b) => b.points - a.points)
+      .slice(0, 3);
     setWinners(sortedGroups);
 
-    setTimeout(() => setAnimateEntrance(true), 500);
-    
-    setTimeout(() => setVisibleWinners([2]), 1000);
-    setTimeout(() => setVisibleWinners([2, 1]), 5000);
-    setTimeout(() => setVisibleWinners([2, 1, 0]), 10000);
-  }, [groups]);
+    setTimeout(() => {
+      setAnimateEntrance(true);
+
+      if (audioRef.current && !musicPlayed) {
+        audioRef.current.play().catch((err) => {
+          console.warn("Autoplay blocked:", err);
+        });
+        setMusicPlayed(true);
+      }
+    }, 500);
+
+    setTimeout(() => setVisibleWinners([2]), 3500);
+    setTimeout(() => setVisibleWinners([2, 1]), 7500);
+    setTimeout(() => setVisibleWinners([2, 1, 0]), 13500);
+  }, [groups, audioLoaded]);
 
   const getDefaultColor = (index) => {
     const colors = ["#FFD166", "#06D6A0", "#118AB2"];
@@ -43,17 +74,19 @@ const WinnerStands = ({ groups }) => {
 
   return (
     <div className="winner-stands-container">
+      <audio ref={audioRef} src="/sounds/podium.mp3" preload="auto" />
+
       <div className="background-animation"></div>
-      
+
       <div className="title-container">
         <h1 className="main-title">Quizilla Champions</h1>
         <h2 className="subtitle">Thank you for the game</h2>
       </div>
-      
+
       <div className="announcement-track">
         {winners.map((winner, index) => (
-          <div 
-            key={index} 
+          <div
+            key={index}
             className={`announcement ${getEntranceAnimation(index)}`}
           >
             <div className="announcement-content">
@@ -72,9 +105,11 @@ const WinnerStands = ({ groups }) => {
 
       <div className={`winner-stands ${animateEntrance ? "animate" : ""}`}>
         {winners.map((winner, index) => (
-          <div 
-            key={index} 
-            className={`winner-container podium-${3 - index} ${getEntranceAnimation(index)}`}
+          <div
+            key={index}
+            className={`winner-container podium-${
+              3 - index
+            } ${getEntranceAnimation(index)}`}
           >
             <div
               className="winner-circle"
@@ -97,11 +132,11 @@ const WinnerStands = ({ groups }) => {
           </div>
         ))}
       </div>
-      
+
       <div className="spotlight"></div>
       <div className="spotlight"></div>
       <div className="spotlight"></div>
-      
+
       <div className="confetti-container">
         {[...Array(150)].map((_, i) => (
           <div key={i} className="confetti"></div>

@@ -7,8 +7,8 @@ const Podium = ({ groups }) => {
   const [visibleWinners, setVisibleWinners] = useState([]);
   const [audioLoaded, setAudioLoaded] = useState(false);
   const [musicPlayed, setMusicPlayed] = useState(false);
-  const [showOverlay, setShowOverlay] = useState(false); // spotlight overlay
-  const [confettiBoom, setConfettiBoom] = useState(false); // new state for boom effect
+  const [showOverlay, setShowOverlay] = useState(false);
+  const [confettiBoom, setConfettiBoom] = useState(false);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -51,20 +51,19 @@ const Podium = ({ groups }) => {
     setTimeout(() => setVisibleWinners([2, 1]), 7500);
     setTimeout(() => setShowOverlay(true), 10000);
     setTimeout(() => {
-      setVisibleWinners([2, 1, 0]); // Reveal first place here
+      setVisibleWinners([2, 1, 0]);
     }, 13500);
     setTimeout(() => setShowOverlay(false), 14000);
 
     setTimeout(() => {
-      setShowOverlay(false); // Hide spotlight
+      setShowOverlay(false);
     }, 17000);
   }, [groups, audioLoaded]);
 
-  // Trigger confetti boom once exactly when first place revealed
   useEffect(() => {
     if (visibleWinners.includes(0)) {
       setConfettiBoom(true);
-      const timer = setTimeout(() => setConfettiBoom(false), 3000); // boom lasts 3 seconds
+      const timer = setTimeout(() => setConfettiBoom(false), 3000);
       return () => clearTimeout(timer);
     }
   }, [visibleWinners]);
@@ -153,14 +152,12 @@ const Podium = ({ groups }) => {
         })}
       </div>
 
-      {/* Spotlight black overlay with transparent hole */}
       {showOverlay && <div className="black-overlay show"></div>}
 
       <div className="spotlight"></div>
       <div className="spotlight"></div>
       <div className="spotlight"></div>
 
-      {/* Always show confetti container, add "boom" class during boom */}
       <div className={`confetti-container ${confettiBoom ? "boom" : ""}`}>
         {[...Array(150)].map((_, i) => (
           <div key={i} className="confetti"></div>

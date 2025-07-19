@@ -806,7 +806,7 @@
   pointer-events: none;
   opacity: 0;
   background: radial-gradient(
-    circle at center 35%,
+    circle at center 50%,
     transparent 200px,
     rgba(0, 0, 0, 0.85) 250px
   );
@@ -835,7 +835,6 @@
   pointer-events: none;
   overflow: visible;
   z-index: 9999;
-  /* normal subtle confetti animation */
   opacity: 0.7;
   transition: opacity 0.3s ease;
 }
@@ -871,7 +870,6 @@
   }
 }
 
-/* boom effect: a quick shake + scale and color burst */
 @keyframes confetti-boom {
   0% {
     filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));

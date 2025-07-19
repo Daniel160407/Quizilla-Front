@@ -26,8 +26,6 @@ $light-text: #333;
     position: relative;
     overflow: visible;
 
-   
-
     form {
       display: flex;
       flex-direction: column;
@@ -63,6 +61,35 @@ $light-text: #333;
 
     &::placeholder {
       color: rgba(255, 255, 255, 0.4);
+      font-weight: 600;
+    }
+  }
+
+  .group-image-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid $kahoot-purple;
+    border-radius: 12px;
+    padding: 12px 15px;
+    color: $kahoot-blue;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    width: 100%;
+    transition: all 0.3s ease;
+    font-family: 'Nunito', sans-serif;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+
+    &:focus {
+      outline: none;
+      border-color: $kahoot-accent;
+      box-shadow: 
+        inset 0 0 10px rgba(0, 0, 0, 0.3),
+        0 0 0 3px rgba($kahoot-accent, 0.3);
+      transform: scale(1.02);
+    }
+
+    &::placeholder {
+      color: rgba($kahoot-blue, 0.5);
       font-weight: 600;
     }
   }

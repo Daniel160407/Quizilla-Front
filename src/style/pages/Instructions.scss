@@ -71,6 +71,7 @@ $section-glow: 0 0 20px rgba($kahoot-purple, 0.3);
 
   h1 {
     color: $kahoot-yellow;
+    text-align: center;
     font-size: 3.5rem;
     margin-bottom: 3rem;
     position: relative;
@@ -105,6 +106,7 @@ $section-glow: 0 0 20px rgba($kahoot-purple, 0.3);
     line-height: 1.8;
     color: $text-light;
     padding: 1.5rem;
+    padding-bottom: 3rem;
     background: rgba($kahoot-purple, 0.15);
     border-radius: 12px;
     border-left: 5px solid $kahoot-purple;
@@ -296,5 +298,24 @@ $section-glow: 0 0 20px rgba($kahoot-purple, 0.3);
     inset: 0;
     outline: 3px solid #ffffff;
     animation: l6-1 0.5s linear infinite;
+  }
+}
+
+.instruction-image-wrapper {
+  margin-top: 1rem;
+  border-radius: 20px;
+  background: rgba($kahoot-blue, 0.1);
+  border: 2px solid rgba($kahoot-yellow, 0.3);
+  box-shadow: $highlight-glow;
+  max-width: 90%;
+  height: 2500px;
+  overflow: hidden;
+
+  img.instruction-image {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    object-fit: contain;
   }
 }

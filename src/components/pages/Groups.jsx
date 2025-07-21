@@ -1,4 +1,4 @@
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import WebSocketManager from "../hooks/WebSocketManager";
 import GroupsList from "../lists/GroupsList";
 import useAxios from "../hooks/UseAxios";
@@ -76,7 +76,6 @@ const Groups = () => {
     wsManager.current.addConnectionListener("close", () => {
       setIsConnected(false);
       setError("Connection lost. Trying to reconnect...");
-
       setTimeout(() => {
         if (!wsManager.current?.isConnected()) {
           initializeWebSocket();
@@ -120,6 +119,26 @@ const Groups = () => {
     setAllGroups(response.data);
   };
 
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file || !broadcastChannel) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64Image = e.target.result;
+
+      broadcastChannel.postMessage({
+        type: "SHOW_INSTRUCTION_IMAGE",
+        payload: {
+          name: file.name,
+          imageData: base64Image,
+        },
+      });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   return (
     <>
       <Navbar />
@@ -129,9 +148,23 @@ const Groups = () => {
         <div className="admin-groups-header">
           <h2>Groups Management</h2>
         </div>
-        <button className="clear-all" onClick={handleClearAllPoints}>
-          Clear Points
-        </button>
+        <div className="editors">
+          <button className="clear-all" onClick={handleClearAllPoints}>
+            Clear Points
+          </button>
+
+          <div className="image-upload-section">
+            <label htmlFor="imageUpload" className="upload-label">
+              Connection QR-code
+            </label>
+            <input
+              type="file"
+              id="imageUpload"
+              accept="image/*"
+              onChange={handleImageUpload}
+            />
+          </div>
+        </div>
 
         <div className="admin-groups-content">
           <div className="groups-list-section">

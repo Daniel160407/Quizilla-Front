@@ -20,6 +20,7 @@ const Projector = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [showWinnerStands, setShowWinnerStands] = useState(false);
   const [groups, setGroups] = useState([]);
+  const [instructionImage, setInstructionImage] = useState(null); // <-- NEW STATE
 
   const wsManager = useRef(null);
   const reconnectAttempts = useRef(0);
@@ -47,9 +48,15 @@ const Projector = () => {
           setShowInstructions(event.data.payload);
           break;
         case "SHOW_WINNER_STANDS":
-          console.log(event.data.show)
+          console.log(event.data.show);
           setGroups(event.data.payload);
           setShowWinnerStands(event.data.show);
+          break;
+        case "SHOW_INSTRUCTION_IMAGE":
+          console.log(event.data.payload.imageData)
+          setInstructionImage(event.data.payload.imageData);
+          break;
+        default:
           break;
       }
     };
@@ -92,9 +99,7 @@ const Projector = () => {
   };
 
   const initializeWebSocket = () => {
-    if (wsManager.current?.isConnected()) {
-      return;
-    }
+    if (wsManager.current?.isConnected()) return;
 
     wsManager.current = new WebSocketManager("/socket");
 
@@ -174,7 +179,7 @@ const Projector = () => {
       ) : showWinnerStands ? (
         <Podium groups={groups} />
       ) : showInstructions ? (
-        <Instructions />
+        <Instructions imageSrc={instructionImage} />
       ) : (
         <div className="projector-dashboard">
           {error && <p className="error">{error}</p>}

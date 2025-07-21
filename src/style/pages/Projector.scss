@@ -120,3 +120,19 @@ $projector-purple: #9c27b0;
     }
   }
 }
+
+.projector-image-wrapper {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.projector-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}

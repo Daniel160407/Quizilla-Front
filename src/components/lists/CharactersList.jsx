@@ -37,7 +37,7 @@ const CharactersList = ({ characterName, setCharacterName }) => {
     { id: 18, name: "panda", image: "/images/characters/panda.png" },
     { id: 19, name: "bunny", image: "/images/characters/bunny.png" },
     { id: 20, name: "cammel", image: "/images/characters/cammel.png" },
-    { id: 21, name: "dear", image: "/images/characters/dear.png" },
+    { id: 21, name: "deer", image: "/images/characters/deer.png" },
     { id: 22, name: "dog", image: "/images/characters/dog.png" },
     { id: 23, name: "wolf", image: "/images/characters/wolf.png" },
     { id: 24, name: "skelleton", image: "/images/characters/skelleton.png" },

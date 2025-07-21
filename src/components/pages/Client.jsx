@@ -121,7 +121,7 @@ const Client = () => {
     wsManager.current.addConnectionListener("error", (err) => {
       console.error("WebSocket error:", err);
       setIsDisconnected(true);
-      setLoading(false);
+      setLoading(true);
       retryConnection();
     });
   };
@@ -166,11 +166,7 @@ const Client = () => {
 
   return (
     <div className="client">
-      {isDisconnected && (
-        <div className="ws-disconnected">
-          Connection lost. Reconnecting...
-        </div>
-      )}
+      {(isDisconnected || loading) && <div className="loader"></div>}
       {loading && <div className="loader"></div>}
       {showForm && groupName === "" && (
         <ClientGroupForm onSubmit={handleSubmit} />
@@ -181,7 +177,9 @@ const Client = () => {
           setCharacterName={setCharacterName}
         />
       )}
-      {groupName !== "" && !showQuiz && <GroupsList groups={allGroups} adminMode={false} />}
+      {groupName !== "" && !showQuiz && (
+        <GroupsList groups={allGroups} adminMode={false} />
+      )}
       {showQuiz && (
         <ClientQuestion
           quiz={quiz}

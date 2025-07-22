@@ -1,5 +1,5 @@
-@use '../uiComponents/Loader';
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
+@use "../uiComponents/Loader";
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap");
 
 $kahoot-dark: #1a103d;
 $kahoot-purple: #7b2cbf;
@@ -11,8 +11,12 @@ $kahoot-yellow: #ffd000;
 $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
 
 .admin-groups-container {
-  font-family: 'Nunito', sans-serif;
-  background: linear-gradient(135deg, darken($kahoot-dark, 5%) 0%, $kahoot-dark 100%);
+  font-family: "Nunito", sans-serif;
+  background: linear-gradient(
+    135deg,
+    darken($kahoot-dark, 5%) 0%,
+    $kahoot-dark 100%
+  );
   min-height: 100vh;
   padding: 30px;
   margin-top: 50px;
@@ -21,18 +25,20 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
   overflow: hidden;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 8px;
-    background: linear-gradient(90deg, 
-      $kahoot-purple 0%, 
-      $kahoot-pink 25%, 
-      $kahoot-blue 50%, 
-      $kahoot-green 75%, 
-      $kahoot-yellow 100%);
+    background: linear-gradient(
+      90deg,
+      $kahoot-purple 0%,
+      $kahoot-pink 25%,
+      $kahoot-blue 50%,
+      $kahoot-green 75%,
+      $kahoot-yellow 100%
+    );
     z-index: 1;
   }
 
@@ -56,14 +62,19 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
       display: inline-block;
 
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: 10px;
         left: 50%;
         transform: translateX(-50%);
         width: 80%;
         height: 4px;
-        background: linear-gradient(90deg, transparent 0%, $kahoot-blue 50%, transparent 100%);
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          $kahoot-blue 50%,
+          transparent 100%
+        );
         border-radius: 2px;
       }
     }
@@ -81,13 +92,17 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
     animation: fadeInUp 0.6s ease-out;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: -50%;
       left: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle, rgba($kahoot-purple, 0.1) 0%, transparent 70%);
+      background: radial-gradient(
+        circle,
+        rgba($kahoot-purple, 0.1) 0%,
+        transparent 70%
+      );
       animation: rotateGradient 20s linear infinite;
       z-index: -1;
     }
@@ -101,11 +116,17 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
       display: flex;
       align-items: center;
 
-      &::before, &::after {
-        content: '';
+      &::before,
+      &::after {
+        content: "";
         flex: 1;
         height: 2px;
-        background: linear-gradient(90deg, transparent 0%, $kahoot-pink 50%, transparent 100%);
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          $kahoot-pink 50%,
+          transparent 100%
+        );
         margin: 0 15px;
       }
     }
@@ -131,17 +152,14 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
     border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-    box-shadow: 
-      0 0 8px rgba($kahoot-purple, 0.6), 
-      0 0 16px rgba($kahoot-pink, 0.4), 
-      inset 0 0 4px rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 8px rgba($kahoot-purple, 0.6),
+      0 0 16px rgba($kahoot-pink, 0.4), inset 0 0 4px rgba(255, 255, 255, 0.15);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
     animation: pulseGlow 2.8s infinite;
 
     &:hover {
       background: linear-gradient(135deg, $kahoot-pink, $kahoot-purple);
-      box-shadow:
-        0 0 12px rgba($kahoot-pink, 0.8),
+      box-shadow: 0 0 12px rgba($kahoot-pink, 0.8),
         0 0 20px rgba($kahoot-purple, 0.6),
         inset 0 0 6px rgba(255, 255, 255, 0.2);
       transform: scale(1.05);
@@ -149,16 +167,14 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
 
     &:active {
       transform: scale(0.97);
-      box-shadow:
-        0 0 6px rgba($kahoot-pink, 0.5),
+      box-shadow: 0 0 6px rgba($kahoot-pink, 0.5),
         0 0 10px rgba($kahoot-purple, 0.4),
         inset 0 0 8px rgba(255, 255, 255, 0.25);
     }
 
     &:focus {
       outline: none;
-      box-shadow:
-        0 0 4px 2px rgba($kahoot-blue, 0.6),
+      box-shadow: 0 0 4px 2px rgba($kahoot-blue, 0.6),
         0 0 10px rgba($kahoot-blue, 0.4);
     }
   }
@@ -176,6 +192,7 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 
     &:hover {
       background: rgba($kahoot-purple, 0.25);
@@ -184,16 +201,22 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
     }
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       height: 3px;
-      background: linear-gradient(90deg, $kahoot-green, $kahoot-blue, $kahoot-pink);
+      background: linear-gradient(
+        90deg,
+        $kahoot-green,
+        $kahoot-blue,
+        $kahoot-pink
+      );
     }
 
     .upload-label {
+      cursor: pointer;
       font-size: 1.1rem;
       font-weight: 700;
       color: $kahoot-blue;
@@ -205,7 +228,7 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
       gap: 8px;
 
       &::before {
-        content: '📤';
+        content: "📤";
         font-size: 1.3rem;
       }
     }
@@ -236,16 +259,18 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
       overflow: hidden;
 
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, 
-          transparent, 
-          rgba(255, 255, 255, 0.2), 
-          transparent);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
         transition: all 0.5s ease;
       }
 
@@ -264,7 +289,7 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
       }
 
       &::before {
-        content: '📷';
+        content: "📷";
         margin-right: 8px;
         font-size: 1.1rem;
       }
@@ -294,7 +319,7 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
       background: rgba(#27ae60, 0.9);
       color: white;
       &::before {
-        content: '✓ ';
+        content: "✓ ";
       }
     }
 
@@ -302,7 +327,7 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
       background: rgba(#e21b57, 0.9);
       color: white;
       &::before {
-        content: '✗ ';
+        content: "✗ ";
       }
     }
   }
@@ -383,18 +408,15 @@ $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
 
 @keyframes pulseGlow {
   0% {
-    box-shadow: 
-      0 0 8px rgba($kahoot-purple, 0.6), 
+    box-shadow: 0 0 8px rgba($kahoot-purple, 0.6),
       0 0 16px rgba($kahoot-pink, 0.4);
   }
   50% {
-    box-shadow: 
-      0 0 14px rgba($kahoot-pink, 0.75), 
+    box-shadow: 0 0 14px rgba($kahoot-pink, 0.75),
       0 0 22px rgba($kahoot-purple, 0.5);
   }
   100% {
-    box-shadow: 
-      0 0 8px rgba($kahoot-purple, 0.6), 
+    box-shadow: 0 0 8px rgba($kahoot-purple, 0.6),
       0 0 16px rgba($kahoot-pink, 0.4);
   }
 }

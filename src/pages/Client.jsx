@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
-import ClientGroupForm from "../forms/ClientGroupForm";
-import CharactersList from "../lists/CharactersList";
-import "../../style/pages/Client.scss";
-import GroupsList from "../lists/GroupsList";
-import WebSocketManager from "../hooks/WebSocketManager";
-import ClientQuestion from "../model/ClientQuestion";
-import useAxios from "../hooks/UseAxios";
+import ClientGroupForm from "../components/forms/ClientGroupForm";
+import CharactersList from "../components/lists/CharactersList";
+import "../style/pages/Client.scss";
+import GroupsList from "../components/lists/GroupsList";
+import WebSocketManager from "../components/hooks/WebSocketManager";
+import ClientQuestion from "../components/model/ClientQuestion";
+import useAxios from "../components/hooks/UseAxios";
+import { ANSWER, GROUP_CREATED, GROUP_CREATION, PLAYER_ANSWERED, QUESTION, QUESTION_CANCEL, QUIZ_START } from "../Constant";
+
 
 const Client = () => {
   const [groupName, setGroupName] = useState(Cookies.get("name") ?? "");
@@ -26,7 +28,7 @@ const Client = () => {
   useEffect(() => {
     if (groupName !== "") {
       const fetchGroups = async () => {
-        const response = await useAxios("/group", "get");
+        const response = await useAxios.get("/group");
         setAllGroups(response.data);
       };
 
@@ -60,8 +62,8 @@ const Client = () => {
         };
 
         wsManager.current.send({
-          sender: "player",
-          type: "GROUP_CREATION",
+          sender: PLAYER_ANSWERED,
+          type: GROUP_CREATION,
           payload: JSON.stringify(groupData),
         });
       };
@@ -86,19 +88,19 @@ const Client = () => {
         message.payload !== "" ? JSON.parse(message.payload) : "";
 
       switch (message.type) {
-        case "GROUP_CREATED":
+        case GROUP_CREATED:
           handleGroupCreated(message);
           break;
-        case "QUESTION":
+        case QUESTION:
           setQuiz(parsedPayload);
           setShowQuiz(true);
           break;
-        case "QUESTION_CANCEL":
+        case QUESTION_CANCEL:
           setAllGroups(parsedPayload);
           setShowQuiz(false);
           setQuizStarted(false);
           break;
-        case "QUIZ_START":
+        case QUIZ_START:
           setQuizStarted(true);
           break;
       }
@@ -156,7 +158,7 @@ const Client = () => {
   const onAnswerSelection = (isCorrect) => {
     wsManager.current.send({
       sender: groupName,
-      type: "ANSWER",
+      type: ANSWER,
       payload: JSON.stringify({
         quiz,
         isCorrect,

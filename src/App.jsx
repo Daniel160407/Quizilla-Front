@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "./components/pages/Dashboard";
-import Categories from "./components/pages/Categories";
-import Quizzes from "./components/pages/Quizzes";
-import Projector from "./components/pages/Projector";
-import Client from "./components/pages/Client";
-import Groups from "./components/pages/Groups";
+import Dashboard from "./pages/Dashboard";
+import Categories from "./pages/Categories";
+import Quizzes from "./pages/Quizzes";
+import Projector from "./pages/Projector";
+import Client from "./pages/Client";
+import Groups from "./pages/Groups";
 
 function App() {
   return (

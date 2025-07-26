@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import useAxios from "../hooks/UseAxios";
-import Category from "../model/Category";
-import Navbar from "../navigation/Navbar";
-import AddCategoryBtn from "../uiComponents/AddCategoryBtn";
-import CategoryForm from "../forms/CategoryForm";
-import "../../style/pages/Categories.scss";
+import { use, useEffect, useState } from "react";
+import useAxios from "../components/hooks/UseAxios";
+import Category from "../components/model/Category";
+import Navbar from "../components/navigation/Navbar";
+import AddCategoryBtn from "../components/uiComponents/AddCategoryBtn";
+import CategoryForm from "../components/forms/CategoryForm";
+import "../style/pages/Categories.scss";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -12,7 +12,7 @@ const Categories = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await useAxios("/category", "get");
+      const response = await useAxios.get("/category");
       setCategories(response.data);
     };
 
@@ -20,17 +20,17 @@ const Categories = () => {
   }, []);
 
   const handleSubmit = async (data) => {
-    const response = await useAxios("/category", "post", data);
+    const response = await useAxios.post("/category", data);
     setCategories(response.data);
   };
 
   const handleEdit = async (data) => {
-    const response = await useAxios("/category", "put", data);
+    const response = await useAxios.put("/category", data);
     setCategories(response.data);
   };
 
   const handleDelete = async (id) => {
-    const response = await useAxios(`/category?id=${id}`, "delete");
+    const response = await useAxios.delete(`/category?id=${id}`);
     setCategories(response.data);
   };
 
@@ -38,8 +38,9 @@ const Categories = () => {
     <>
       <Navbar />
       <div className="categories">
-        {categories.map((category) => (
+        {categories.map((category, index) => (
           <Category
+            key={index}
             category={category}
             onEdit={handleEdit}
             onDelete={handleDelete}

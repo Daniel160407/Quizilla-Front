@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import Navbar from "../navigation/Navbar";
-import useAxios from "../hooks/UseAxios";
-import "../../style/pages/Dashboard.scss";
-import DashboardQuizList from "../lists/DashboardQuizList";
-import Question from "../model/Question";
+import Navbar from "../components/navigation/Navbar";
+import useAxios from "../components/hooks/UseAxios";
+import "../style/pages/Dashboard.scss";
+import DashboardQuizList from "../components/lists/DashboardQuizList";
+import Question from "../components/model/Question";
 import { FaDesktop, FaTrophy } from "react-icons/fa";
-import WebSocketManager from "../hooks/WebSocketManager";
-import GroupsList from "../lists/GroupsList";
+import WebSocketManager from "../components/hooks/WebSocketManager";
+import GroupsList from "../components/lists/GroupsList";
+import { ADMIN_ROLE, PLAYER_ANSWERED, QUESTION, QUESTION_CANCEL, QUIZ_CANCELED, QUIZ_SELECTED, QUIZ_START, SHOW_WINNER_STANDS } from "../Constant";
 
 const Dashboard = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -29,11 +30,8 @@ const Dashboard = () => {
 
       broadcastChannel.current.onmessage = (event) => {
         switch (event.data.type) {
-          case "QUESTION_CANCEL":
-            handleTimeUp();
-            break;
-          case "QUIZ_START":
-            handleQuizStart();
+          case QUIZ_START:
+            handleQuizStart();  
             break;
         }
       };
@@ -61,8 +59,8 @@ const Dashboard = () => {
         try {
           setLoading(true);
           const [quizzesResponse, categoriesResponse] = await Promise.all([
-            useAxios("/quiz", "get"),
-            useAxios("/category", "get"),
+            useAxios.get("/quiz"),
+            useAxios.get("/category"),
           ]);
           setQuizzes(quizzesResponse.data);
           setCategories(categoriesResponse.data);
@@ -84,10 +82,10 @@ const Dashboard = () => {
     wsManager.current.addMessageHandler((message) => {
       try {
         switch (message.type) {
-          case "PLAYER_ANSWERED":
+          case PLAYER_ANSWERED:
             handlePlayerAnswered(JSON.parse(message.payload));
             break;
-          case "QUESTION_CANCEL":
+          case QUESTION_CANCEL:
             setGroups(JSON.parse(message.payload));
             break;
           default:
@@ -131,7 +129,7 @@ const Dashboard = () => {
 
     try {
       broadcastChannel.current.postMessage({
-        type: "PLAYER_ANSWERED",
+        type: PLAYER_ANSWERED,
         payload: updatedGroup.name,
       });
     } catch (e) {
@@ -142,18 +140,18 @@ const Dashboard = () => {
   const handleQuizClick = (quiz) => {
     setSelectedQuiz(quiz);
     setShowQuestion(true);
-    useAxios(`/quiz/enable?id=${quiz.id}&enable=${false}`, "put");
+    useAxios.put(`/quiz/enable?id=${quiz.id}&enable=${false}`);
 
     if (broadcastChannel.current) {
       broadcastChannel.current.postMessage({
-        type: "QUIZ_SELECTED",
+        type: QUIZ_SELECTED,
         payload: quiz,
       });
     }
 
     wsManager.current.send({
-      sender: "admin",
-      type: "QUESTION",
+      sender: ADMIN_ROLE,
+      type: QUESTION,
       payload: JSON.stringify(quiz),
     });
   };
@@ -164,23 +162,23 @@ const Dashboard = () => {
     setTimeout(() => {
       if (broadcastChannel.current) {
         broadcastChannel.current.postMessage({
-          type: "QUIZ_CANCELED",
+          type: QUIZ_CANCELED,
           payload: selectedQuiz,
         });
       }
     }, 1000);
 
     wsManager.current.send({
-      sender: "admin",
-      type: "QUESTION_CANCEL",
+      sender: ADMIN_ROLE,
+      type: QUESTION_CANCEL,
       payload: "",
     });
   };
 
   const handleQuizStart = () => {
     wsManager.current.send({
-      sender: "admin",
-      type: "QUIZ_START",
+      sender: ADMIN_ROLE,
+      type: QUIZ_START,
       payload: "",
     });
   };
@@ -193,7 +191,7 @@ const Dashboard = () => {
       setTimeout(() => {
         if (broadcastChannel.current) {
           broadcastChannel.current.postMessage({
-            type: "QUIZ_SELECTED",
+            type: QUIZ_SELECTED,
             payload: selectedQuiz,
           });
         }
@@ -203,17 +201,16 @@ const Dashboard = () => {
 
   const openWinnerStands = async () => {
     const fetchGroups = async () => {
-      const response = await useAxios("/group", "get");
+      const response = await useAxios.get("/group");
       return response.data;
     };
 
     const groups = await fetchGroups();
 
-    console.log(!showWinnerStands);
     setTimeout(() => {
       if (broadcastChannel.current) {
         broadcastChannel.current.postMessage({
-          type: "SHOW_WINNER_STANDS",
+          type: SHOW_WINNER_STANDS,
           payload: groups,
           show: !showWinnerStands,
         });

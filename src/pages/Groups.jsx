@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import WebSocketManager from "../hooks/WebSocketManager";
-import GroupsList from "../lists/GroupsList";
-import useAxios from "../hooks/UseAxios";
-import "../../style/pages/Groups.scss";
-import Navbar from "../navigation/Navbar";
-import ShowConnectionLinkPageBtn from "../uiComponents/ShowConnectionLinkPageBtn";
+import WebSocketManager from "../components/hooks/WebSocketManager";
+import GroupsList from "../components/lists/GroupsList";
+import useAxios from "../components/hooks/UseAxios";
+import "../style/pages/Groups.scss";
+import Navbar from "../components/navigation/Navbar";
+import ShowConnectionLinkPageBtn from "../components/uiComponents/ShowConnectionLinkPageBtn";
+import { GROUP_CREATED, SHOW_INSTRUCTION_IMAGE, SHOW_INSTRUCTIONS } from "../Constant";
 
 const Groups = () => {
   const [allGroups, setAllGroups] = useState([]);
-  const [error, setError] = useState(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const [, setError] = useState(null);
+  const [, setIsConnected] = useState(false);
   const [broadcastChannel, setBroadcastChannel] = useState(null);
   const [showInstructions, setShowInstructions] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ const Groups = () => {
 
   const fetchGroups = async () => {
     try {
-      const response = await useAxios("/group", "get");
+      const response = await useAxios.get("/group");
       setAllGroups(response.data);
     } catch (err) {
       console.error("Failed to fetch groups", err);
@@ -56,7 +57,7 @@ const Groups = () => {
     wsManager.current.addMessageHandler((message) => {
       try {
         switch (message.type) {
-          case "GROUP_CREATED":
+          case GROUP_CREATED:
             handleGroupCreated(JSON.parse(message.payload));
             break;
           default:
@@ -83,7 +84,7 @@ const Groups = () => {
       }, 3000);
     });
 
-    wsManager.current.addConnectionListener("error", (err) => {
+    wsManager.current.addConnectionListener("error", () => {
       setIsConnected(false);
       setError("Connection error. Attempting to reconnect...");
     });
@@ -98,24 +99,24 @@ const Groups = () => {
 
     setTimeout(() => {
       broadcastChannel.postMessage({
-        type: "SHOW_INSTRUCTIONS",
+        type: SHOW_INSTRUCTIONS,
         payload: !showInstructions,
       });
     }, 1000);
   };
 
   const handleGroupEdit = async (group) => {
-    const response = await useAxios("/group", "put", group);
+    const response = await useAxios.put("/group", group);
     setAllGroups(response.data);
   };
 
   const handleGroupDelete = async (groupId) => {
-    const response = await useAxios(`/group?id=${groupId}`, "delete");
+    const response = await useAxios.delete(`/group?id=${groupId}`);
     setAllGroups(response.data);
   };
 
   const handleClearAllPoints = async () => {
-    const response = await useAxios("/group/clear", "put");
+    const response = await useAxios.put("/group/clear");
     setAllGroups(response.data);
   };
 
@@ -128,7 +129,7 @@ const Groups = () => {
       const base64Image = e.target.result;
 
       broadcastChannel.postMessage({
-        type: "SHOW_INSTRUCTION_IMAGE",
+        type: SHOW_INSTRUCTION_IMAGE,
         payload: {
           name: file.name,
           imageData: base64Image,

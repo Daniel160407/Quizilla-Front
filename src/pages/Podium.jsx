@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "../../style/pages/Podium.scss";
+import "../style/pages/Podium.scss";
 
 const Podium = ({ groups }) => {
   const [winners, setWinners] = useState([]);

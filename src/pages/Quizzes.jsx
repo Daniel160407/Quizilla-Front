@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import Navbar from "../navigation/Navbar";
-import useAxios from "../hooks/UseAxios";
-import QuizList from "../lists/QuizList";
-import AddQuizBtn from "../uiComponents/AddQuizBtn";
-import QuizForm from "../forms/QuizForm";
-import "../../style/pages/Quizzes.scss";
+import Navbar from "../components/navigation/Navbar";
+import useAxios from "../components/hooks/UseAxios";
+import QuizList from "../components/lists/QuizList";
+import AddQuizBtn from "../components/uiComponents/AddQuizBtn";
+import QuizForm from "../components/forms/QuizForm";
+import "../style/pages/Quizzes.scss";
 
 const Quizzes = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -18,7 +18,7 @@ const Quizzes = () => {
     const fetchQuizzes = async () => {
       try {
         setLoading(true);
-        const response = await useAxios("/quiz", "get");
+        const response = await useAxios.get("/quiz");
         setQuizzes(response.data);
 
         const uniqueTypes = [
@@ -34,7 +34,7 @@ const Quizzes = () => {
 
     const fetchCategories = async () => {
       try {
-        const response = await useAxios("/category", "get");
+        const response = await useAxios.get("/category");
         setCategories(response.data);
       } catch (err) {
         setError(err.message || "Failed to load categories");
@@ -47,7 +47,7 @@ const Quizzes = () => {
 
   const handleSubmit = async (quizData) => {
     try {
-      const response = await useAxios("/quiz", "post", quizData);
+      const response = await useAxios.post("/quiz", quizData);
 
       setQuizzes(response.data);
 
@@ -62,12 +62,12 @@ const Quizzes = () => {
   };
 
   const handleEdit = async (data) => {
-    const response = await useAxios("/quiz", "put", data);
+    const response = await useAxios.put("/quiz", data);
     setQuizzes(response.data);
   };
 
   const handleDelete = async (id) => {
-    const response = await useAxios(`/quiz?id=${id}`, 'delete');
+    const response = await useAxios.delete(`/quiz?id=${id}`);
     setQuizzes(response.data);
   };
 

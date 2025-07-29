@@ -9,8 +9,8 @@ import { GROUP_CREATED, SHOW_INSTRUCTION_IMAGE, SHOW_INSTRUCTIONS } from "../Con
 
 const Groups = () => {
   const [allGroups, setAllGroups] = useState([]);
-  const [error, setError] = useState(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const [, setError] = useState(null);
+  const [, setIsConnected] = useState(false);
   const [broadcastChannel, setBroadcastChannel] = useState(null);
   const [showInstructions, setShowInstructions] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -84,7 +84,7 @@ const Groups = () => {
       }, 3000);
     });
 
-    wsManager.current.addConnectionListener("error", (err) => {
+    wsManager.current.addConnectionListener("error", () => {
       setIsConnected(false);
       setError("Connection error. Attempting to reconnect...");
     });

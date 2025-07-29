@@ -12,12 +12,10 @@ import { ADMIN_ROLE, PLAYER_ANSWERED, QUESTION, QUESTION_CANCEL, QUIZ_CANCELED, 
 const Dashboard = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showQuestion, setShowQuestion] = useState(false);
   const [showWinnerStands, setShowWinnerStands] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState({});
-  const [projectorWindow, setProjectorWindow] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [groups, setGroups] = useState([]);
 
@@ -64,8 +62,6 @@ const Dashboard = () => {
           ]);
           setQuizzes(quizzesResponse.data);
           setCategories(categoriesResponse.data);
-        } catch (err) {
-          setError(err.message || "Failed to load data");
         } finally {
           setLoading(false);
         }
@@ -97,13 +93,12 @@ const Dashboard = () => {
     });
 
     wsManager.current.addConnectionListener("open", () => {
+      console.log('Websocket connected');
       setIsConnected(true);
-      setError(null);
     });
 
     wsManager.current.addConnectionListener("close", () => {
       setIsConnected(false);
-      setError("Connection lost. Trying to reconnect...");
       setTimeout(() => {
         if (!wsManager.current?.isConnected()) {
           initializeWebSocket();
@@ -113,7 +108,6 @@ const Dashboard = () => {
 
     wsManager.current.addConnectionListener("error", (err) => {
       setIsConnected(false);
-      setError("Connection error. Attempting to reconnect...");
       console.error("WebSocket error:", err);
     });
   };
@@ -184,8 +178,7 @@ const Dashboard = () => {
   };
 
   const openProjector = () => {
-    const win = window.open("/projector", "_blank", "width=1200,height=800");
-    setProjectorWindow(win);
+    window.open("/projector", "_blank", "width=1200,height=800");
 
     if (selectedQuiz && Object.keys(selectedQuiz).length > 0) {
       setTimeout(() => {

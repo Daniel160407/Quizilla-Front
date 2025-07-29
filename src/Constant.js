@@ -1,7 +1,7 @@
-export const ADMIN_ROLE = "admin";
-export const PROJECTOR_ROLE = "projector";
-export const CLIENT_ROLE = "player";
-export const SERVER_ROLE = "server";
+export const ADMIN_ROLE = "ADMIN";
+export const PROJECTOR_ROLE = "PROJECTOR";
+export const CLIENT_ROLE = "PLAYER";
+export const SERVER_ROLE = "SERVER";
 export const QUESTION = "QUESTION";
 export const QUESTION_CANCEL = "QUESTION_CANCEL";
 export const QUIZ_CANCELED = "QUIZ_CANCELED";

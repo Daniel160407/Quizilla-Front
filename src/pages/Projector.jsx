@@ -6,7 +6,17 @@ import ProjectorQuestion from "../components/model/ProjectorQuestion";
 import Instructions from "./Instructions";
 import WebSocketManager from "../components/hooks/WebSocketManager";
 import Podium from "./Podium";
-import { PLAYER_ANSWERED, PROJECTOR_ROLE, QUESTION_CANCEL, QUIZ_CANCELED, QUIZ_SELECTED, QUIZ_START, SHOW_INSTRUCTION_IMAGE, SHOW_INSTRUCTIONS, SHOW_WINNER_STANDS } from "../Constant";
+import {
+  PLAYER_ANSWERED,
+  PROJECTOR_ROLE,
+  QUESTION_CANCEL,
+  QUIZ_CANCELED,
+  QUIZ_SELECTED,
+  QUIZ_START,
+  SHOW_INSTRUCTION_IMAGE,
+  SHOW_INSTRUCTIONS,
+  SHOW_WINNER_STANDS,
+} from "../Constant";
 
 const Projector = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -15,7 +25,6 @@ const Projector = () => {
   const [loading, setLoading] = useState(false);
   const [showQuestion, setShowQuestion] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState({});
-  const [broadcastChannel, setBroadcastChannel] = useState(null);
   const [playersAnswered, setPlayersAnswered] = useState([]);
   const [showInstructions, setShowInstructions] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
@@ -29,7 +38,6 @@ const Projector = () => {
 
   useEffect(() => {
     const channel = new BroadcastChannel("quiz_channel");
-    setBroadcastChannel(channel);
 
     channel.onmessage = (event) => {
       switch (event.data.type) {
@@ -154,7 +162,7 @@ const Projector = () => {
     sendWebSocketMessage({
       sender: PROJECTOR_ROLE,
       type: QUESTION_CANCEL,
-      payload: selectedQuiz.points
+      payload: selectedQuiz.points,
     });
   };
 
@@ -168,7 +176,13 @@ const Projector = () => {
 
   return (
     <>
-      {showQuestion ? (
+        <h1>{isConnected}</h1>
+    
+      {!isConnected ? (
+        <>
+          <div className="loader"></div>
+        </>
+      ) : showQuestion ? (
         <ProjectorQuestion
           quiz={selectedQuiz}
           playersAnswered={playersAnswered}

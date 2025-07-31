@@ -72,7 +72,7 @@ $toggle-thumb: #f5f5f5;
   p {
     color: $text-light;
     font-weight: 600;
-    font-size: 1rem; // reduced
+    font-size: 1rem;
     margin: 0;
     position: relative;
     flex-grow: 1;
@@ -92,7 +92,7 @@ $toggle-thumb: #f5f5f5;
     border: none;
     background: transparent;
     cursor: pointer;
-    padding: 0.2rem 0.4rem; // reduced
+    padding: 0.2rem 0.4rem;
     margin-left: 0.8rem;
     border-radius: 20px;
     transition: all 0.3s ease;

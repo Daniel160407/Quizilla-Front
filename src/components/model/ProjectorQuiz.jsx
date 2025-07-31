@@ -6,6 +6,7 @@ const ProjectorQuiz = ({ quiz, index }) => {
 
   return (
     <div className={`projector-quiz ${!isEnabled ? "disabled" : ""}`}>
+      {!isEnabled && <p className="disabled-x">X</p>}
       <div className="quiz-label">
         <span className="quiz-index">
           {quiz.type}.{index + 1}

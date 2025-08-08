@@ -145,6 +145,38 @@ $winner-gold: #ffc107;
   }
 }
 
+.music {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+  color: #00f0ff; // neon blue
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: #ffffff;
+    background-color: rgba(0, 240, 255, 0.1);
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 10px #00f0ff;
+  }
+
+  svg {
+    pointer-events: none; // avoid accidental clicks on the icon itself
+  }
+}
+
+
 @keyframes cardAppear {
   0% {
     opacity: 0;

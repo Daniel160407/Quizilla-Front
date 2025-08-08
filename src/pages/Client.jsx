@@ -7,8 +7,15 @@ import GroupsList from "../components/lists/GroupsList";
 import WebSocketManager from "../components/hooks/WebSocketManager";
 import ClientQuestion from "../components/model/ClientQuestion";
 import useAxios from "../components/hooks/UseAxios";
-import { ANSWER, CLIENT_ROLE, GROUP_CREATED, GROUP_CREATION, QUESTION, QUESTION_CANCEL, QUIZ_START } from "../Constant";
-
+import {
+  ANSWER,
+  CLIENT_ROLE,
+  GROUP_CREATED,
+  GROUP_CREATION,
+  QUESTION,
+  QUESTION_CANCEL,
+  QUIZ_START,
+} from "../Constant";
 
 const Client = () => {
   const [groupName, setGroupName] = useState(Cookies.get("name") ?? "");
@@ -61,11 +68,15 @@ const Client = () => {
           imageUrl: characterName,
         };
 
+        console.log(groupData);
+
         wsManager.current.send({
           sender: CLIENT_ROLE,
           type: GROUP_CREATION,
           payload: JSON.stringify(groupData),
         });
+        console.log(groupData);
+
       };
 
       saveGroup();
@@ -77,6 +88,7 @@ const Client = () => {
     setIsDisconnected(false);
 
     if (wsManager.current) {
+      console.log("Auto disconnect");
       wsManager.current.disconnect();
     }
 
@@ -142,11 +154,11 @@ const Client = () => {
     setShowCharacters(false);
   };
 
-  useEffect(() => {
-    if (groupName && !wsManager.current) {
-      initializeWebSocket();
-    }
-  }, [groupName]);
+  // useEffect(() => {
+  //   if (groupName && !wsManager.current) {
+  //     initializeWebSocket();
+  //   }
+  // }, [groupName]);
 
   const handleSubmit = (groupName) => {
     setGroup({ name: groupName, imageUrl: "" });

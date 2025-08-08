@@ -4,7 +4,7 @@ import useAxios from "../components/hooks/UseAxios";
 import "../style/pages/Dashboard.scss";
 import DashboardQuizList from "../components/lists/DashboardQuizList";
 import Question from "../components/model/Question";
-import { FaDesktop, FaTrophy } from "react-icons/fa";
+import { FaDesktop, FaTrophy, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import WebSocketManager from "../components/hooks/WebSocketManager";
 import GroupsList from "../components/lists/GroupsList";
 import { ADMIN_ROLE, PLAYER_ANSWERED, QUESTION, QUESTION_CANCEL, QUIZ_CANCELED, QUIZ_SELECTED, QUIZ_START, SHOW_WINNER_STANDS } from "../Constant";
@@ -18,6 +18,7 @@ const Dashboard = () => {
   const [selectedQuiz, setSelectedQuiz] = useState({});
   const [isConnected, setIsConnected] = useState(false);
   const [groups, setGroups] = useState([]);
+  const [isMusicTurnedOn, setIsMusicTurnedOn] = useState(false);
 
   const wsManager = useRef(null);
   const broadcastChannel = useRef(null);
@@ -81,7 +82,7 @@ const Dashboard = () => {
           case PLAYER_ANSWERED:
             handlePlayerAnswered(JSON.parse(message.payload));
             break;
-          case QUESTION_CANCEL:
+          case QUIZ_START:
             setGroups(JSON.parse(message.payload));
             break;
           default:
@@ -212,6 +213,10 @@ const Dashboard = () => {
     }, 1000);
   };
 
+  const handleMusicToggle = () => {
+    setIsMusicTurnedOn(!isMusicTurnedOn);
+  }
+
   return (
     <>
       <Navbar />
@@ -238,6 +243,16 @@ const Dashboard = () => {
             >
               <FaTrophy className="button-icon" />
               <span>Podium</span>
+            </button>
+            <button
+            className="music"
+            onClick={handleMusicToggle}
+            >
+              {isMusicTurnedOn ? (
+                <FaVolumeMute />
+              ) : (
+                <FaVolumeUp/>
+              )}
             </button>
           </div>
           {!isConnected && <div className="loader"></div>}

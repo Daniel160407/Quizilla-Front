@@ -1,11 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap');
 
+// Color Variables
 $kahoot-dark: #1a103d;
 $kahoot-purple: #7b2cbf;
 $kahoot-pink: #e21b57;
 $kahoot-blue: #4cc9f0;
 $kahoot-accent: #f72585;
 $kahoot-gold: #ffd700;
+$correct-green: #4CAF50;
+$incorrect-red: #f44336;
 $neon-glow: 0 0 10px rgba(123, 44, 191, 0.7), 0 0 20px rgba(123, 44, 191, 0.5);
 $gold-glow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.4);
 $light-bg: #f7f7f9;
@@ -13,6 +16,7 @@ $light-card-bg: #ffffff;
 $light-border: #ccc;
 $light-text: #333;
 
+// Light Mode Styles
 .groups-list.light {
   background: $light-bg;
 
@@ -47,9 +51,20 @@ $light-text: #333;
       border: 2px solid $kahoot-gold;
       box-shadow: $gold-glow;
     }
+
+    &.correct-answer:not(.leader) {
+      border: 2px solid $correct-green;
+      box-shadow: 0 0 10px rgba($correct-green, 0.5);
+    }
+
+    &.incorrect-answer:not(.leader) {
+      border: 2px solid $incorrect-red;
+      box-shadow: 0 0 10px rgba($incorrect-red, 0.5);
+    }
   }
 }
 
+// Base Styles
 .groups-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -121,10 +136,61 @@ $light-text: #333;
       }
     }
 
+    // Correct Answer Styling (non-leader)
+    &.correct-answer:not(.leader) {
+      border: 3px solid $correct-green;
+      box-shadow: 0 0 15px rgba($correct-green, 0.7);
+      animation: correctPulse 1.5s infinite;
+
+      &::after {
+        content: '✓';
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: $correct-green;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        z-index: 11;
+        box-shadow: 0 0 10px rgba($correct-green, 0.8);
+      }
+    }
+
+    // Incorrect Answer Styling (non-leader)
+    &.incorrect-answer:not(.leader) {
+      border: 3px solid $incorrect-red;
+      box-shadow: 0 0 15px rgba($incorrect-red, 0.7);
+      animation: incorrectPulse 1.5s infinite;
+
+      &::after {
+        content: '✗';
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: $incorrect-red;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        z-index: 11;
+        box-shadow: 0 0 10px rgba($incorrect-red, 0.8);
+      }
+    }
+
+    // Leader Styling (takes precedence)
     &.leader {
       border: 3px solid $kahoot-gold;
       box-shadow: $gold-glow;
-      animation: goldPulse 2s infinite ease-in-out;
+      animation: goldPulse 2s infinite ease-in-out !important;
       position: relative;
       z-index: 10;
 
@@ -146,6 +212,44 @@ $light-text: #333;
         box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
       }
 
+      // Leader with correct answer
+      &.correct-answer::before {
+        content: '✓';
+        position: absolute;
+        bottom: -8px;
+        right: -8px;
+        background: $correct-green;
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        z-index: 11;
+        box-shadow: 0 0 8px rgba($correct-green, 0.8);
+      }
+
+      // Leader with incorrect answer
+      &.incorrect-answer::before {
+        content: '✗';
+        position: absolute;
+        bottom: -8px;
+        right: -8px;
+        background: $incorrect-red;
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        z-index: 11;
+        box-shadow: 0 0 8px rgba($incorrect-red, 0.8);
+      }
+
       .points-value {
         color: $kahoot-gold;
       }
@@ -155,6 +259,7 @@ $light-text: #333;
       }
     }
 
+    // Group Image Container
     .group-image-container {
       width: 100%;
       padding-top: 100%;
@@ -174,6 +279,7 @@ $light-text: #333;
       }
     }
 
+    // Group Info Section
     .group-info {
       padding: 18px 15px;
       text-align: center;
@@ -329,6 +435,18 @@ $light-text: #333;
   }
 }
 
+@keyframes correctPulse {
+  0% { box-shadow: 0 0 0 0 rgba($correct-green, 0.7); }
+  70% { box-shadow: 0 0 0 12px rgba($correct-green, 0); }
+  100% { box-shadow: 0 0 0 0 rgba($correct-green, 0); }
+}
+
+@keyframes incorrectPulse {
+  0% { box-shadow: 0 0 0 0 rgba($incorrect-red, 0.7); }
+  70% { box-shadow: 0 0 0 12px rgba($incorrect-red, 0); }
+  100% { box-shadow: 0 0 0 0 rgba($incorrect-red, 0); }
+}
+
 @media (max-width: 768px) {
   .groups-list {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -351,6 +469,34 @@ $light-text: #333;
           button {
             width: 100%;
           }
+        }
+      }
+
+      &.correct-answer:not(.leader)::after,
+      &.incorrect-answer:not(.leader)::after {
+        width: 24px;
+        height: 24px;
+        font-size: 1rem;
+        top: -8px;
+        right: -8px;
+      }
+
+      &.leader {
+        &::after {
+          width: 24px;
+          height: 24px;
+          font-size: 1rem;
+          top: -8px;
+          right: -8px;
+        }
+
+        &.correct-answer::before,
+        &.incorrect-answer::before {
+          width: 20px;
+          height: 20px;
+          font-size: 0.8rem;
+          bottom: -6px;
+          right: -6px;
         }
       }
     }

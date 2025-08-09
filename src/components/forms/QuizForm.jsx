@@ -1,8 +1,10 @@
 import { useState } from "react";
+import Cookies from "js-cookie";
 import '../../style/forms/QuizForm.scss';
 
-const QuizForm = ({ types, categoryId, onSubmit }) => {
+const QuizForm = ({ types, gameId, categoryId, onSubmit }) => {
   const [formData, setFormData] = useState({
+    gameId,
     categoryId,
     type: "A",
     question: "",

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Cookies from "js-cookie";
 import '../../style/forms/CategoryForm.scss';
 
 const CategoryForm = ({ onSubmit }) => {
@@ -7,7 +8,10 @@ const CategoryForm = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name.trim()) {
-      onSubmit({ name });
+      onSubmit({
+        name,
+        gameId: Cookies.get('gameId'),
+      });
       setName("");
     }
   };

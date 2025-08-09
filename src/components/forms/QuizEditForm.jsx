@@ -3,12 +3,14 @@ import '../../style/forms/QuizForm.scss';
 
 const QuizEditForm = ({ 
   quiz, 
-  types, 
+  types,
+  gameId,
   categoryId, 
   onSubmit, 
   onCancel 
 }) => {
   const [formData, setFormData] = useState({
+    gameId,
     categoryId,
     type: "A",
     question: "",
@@ -21,6 +23,7 @@ const QuizEditForm = ({
   useEffect(() => {
     if (quiz) {
       setFormData({
+        gameId,
         categoryId: quiz.categoryId || categoryId,
         type: quiz.type || "",
         question: quiz.question || "",

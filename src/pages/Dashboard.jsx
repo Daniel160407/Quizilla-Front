@@ -7,7 +7,17 @@ import Question from "../components/model/Question";
 import { FaDesktop, FaTrophy, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import WebSocketManager from "../components/hooks/WebSocketManager";
 import GroupsList from "../components/lists/GroupsList";
-import { ADMIN_ROLE, PLAYER_ANSWERED, QUESTION, QUESTION_CANCEL, QUIZ_CANCELED, QUIZ_SELECTED, QUIZ_START, SHOW_WINNER_STANDS } from "../Constant";
+import Cookies from "js-cookie";
+import {
+  ADMIN_ROLE,
+  PLAYER_ANSWERED,
+  QUESTION,
+  QUESTION_CANCEL,
+  QUIZ_CANCELED,
+  QUIZ_SELECTED,
+  QUIZ_START,
+  SHOW_WINNER_STANDS,
+} from "../Constant";
 
 const Dashboard = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -22,6 +32,7 @@ const Dashboard = () => {
 
   const wsManager = useRef(null);
   const broadcastChannel = useRef(null);
+  const gameId = Cookies.get("gameId");
 
   useEffect(() => {
     const initializeComponents = () => {
@@ -30,7 +41,7 @@ const Dashboard = () => {
       broadcastChannel.current.onmessage = (event) => {
         switch (event.data.type) {
           case QUIZ_START:
-            handleQuizStart();  
+            handleQuizStart();
             break;
         }
       };
@@ -58,8 +69,8 @@ const Dashboard = () => {
         try {
           setLoading(true);
           const [quizzesResponse, categoriesResponse] = await Promise.all([
-            useAxios.get("/quiz"),
-            useAxios.get("/category"),
+            useAxios.get(`/quiz?gameid=${gameId}`),
+            useAxios.get(`/category?gameid=${gameId}`),
           ]);
           setQuizzes(quizzesResponse.data);
           setCategories(categoriesResponse.data);
@@ -94,7 +105,7 @@ const Dashboard = () => {
     });
 
     wsManager.current.addConnectionListener("open", () => {
-      console.log('Websocket connected');
+      console.log("Websocket connected");
       setIsConnected(true);
     });
 
@@ -215,7 +226,7 @@ const Dashboard = () => {
 
   const handleMusicToggle = () => {
     setIsMusicTurnedOn(!isMusicTurnedOn);
-  }
+  };
 
   return (
     <>
@@ -223,7 +234,7 @@ const Dashboard = () => {
       {showQuestion ? (
         <>
           <Question quiz={selectedQuiz} onBack={handleBackToDashboard} />
-          <GroupsList groups={groups} mode={'light'} />
+          <GroupsList groups={groups} mode={"light"} />
         </>
       ) : (
         <div className="dashboard">
@@ -244,15 +255,8 @@ const Dashboard = () => {
               <FaTrophy className="button-icon" />
               <span>Podium</span>
             </button>
-            <button
-            className="music"
-            onClick={handleMusicToggle}
-            >
-              {isMusicTurnedOn ? (
-                <FaVolumeMute />
-              ) : (
-                <FaVolumeUp/>
-              )}
+            <button className="music" onClick={handleMusicToggle}>
+              {isMusicTurnedOn ? <FaVolumeMute /> : <FaVolumeUp />}
             </button>
           </div>
           {!isConnected && <div className="loader"></div>}

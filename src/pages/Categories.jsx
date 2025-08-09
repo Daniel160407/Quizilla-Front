@@ -5,14 +5,17 @@ import Navbar from "../components/navigation/Navbar";
 import AddCategoryBtn from "../components/uiComponents/AddCategoryBtn";
 import CategoryForm from "../components/forms/CategoryForm";
 import "../style/pages/Categories.scss";
+import Cookies from "js-cookie";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
 
+  const gameId = Cookies.get('gameId');
+
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await useAxios.get("/category");
+      const response = await useAxios.get(`/category?gameid=${gameId}`);
       setCategories(response.data);
     };
 
@@ -20,7 +23,7 @@ const Categories = () => {
   }, []);
 
   const handleSubmit = async (data) => {
-    const response = await useAxios.post("/category", data);
+    const response = await useAxios.post(`/category`, data);
     setCategories(response.data);
   };
 

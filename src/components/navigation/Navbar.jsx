@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FiMenu, FiX } from 'react-icons/fi';
 import '../../style/navigation/Navbar.scss';
 
 const Navbar = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const navItems = [
+    { label: 'Games', path: '/games' },
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'Categories', path: '/categories' },
     { label: 'Quizzes', path: '/quizzes' },

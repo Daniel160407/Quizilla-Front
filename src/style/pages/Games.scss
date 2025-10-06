@@ -1,0 +1,9 @@
+.games {
+  margin-top: 50px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  padding: 30px;
+  background: linear-gradient(135deg, #10002b 0%, #240046 100%);
+  min-height: 100vh;
+}

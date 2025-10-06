@@ -4,6 +4,7 @@ import useAxios from "../components/hooks/UseAxios";
 import QuizList from "../components/lists/QuizList";
 import AddQuizBtn from "../components/uiComponents/AddQuizBtn";
 import QuizForm from "../components/forms/QuizForm";
+import Cookies from "js-cookie";
 import "../style/pages/Quizzes.scss";
 
 const Quizzes = () => {
@@ -14,11 +15,13 @@ const Quizzes = () => {
   const [showFormForCategory, setShowFormForCategory] = useState(null);
   const [types, setTypes] = useState([]);
 
+  const gameId = Cookies.get('gameId');
+
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
         setLoading(true);
-        const response = await useAxios.get("/quiz");
+        const response = await useAxios.get(`/quiz?gameid=${gameId}`);
         setQuizzes(response.data);
 
         const uniqueTypes = [
@@ -34,7 +37,7 @@ const Quizzes = () => {
 
     const fetchCategories = async () => {
       try {
-        const response = await useAxios.get("/category");
+        const response = await useAxios.get(`/category?gameid=${gameId}`);
         setCategories(response.data);
       } catch (err) {
         setError(err.message || "Failed to load categories");
@@ -97,6 +100,7 @@ const Quizzes = () => {
                 {showFormForCategory === category.id && (
                   <QuizForm
                     types={types}
+                    gameId={gameId}
                     categoryId={category.id}
                     onSubmit={handleSubmit}
                     onCancel={() => setShowFormForCategory(null)}

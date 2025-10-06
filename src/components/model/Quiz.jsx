@@ -2,10 +2,13 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import "../../style/model/Quiz.scss";
 import QuizEditForm from "../forms/QuizEditForm";
 import { useState } from "react";
+import Cookies from "js-cookie";
 
 const Quiz = ({ quiz, index, onEdit, onDelete, types }) => {
   const [showEditForm, setShowEditForm] = useState(false);
+  
   const hasRightAnswer = quiz.answer.includes("**");
+  const gameId = Cookies.get('gameId');
 
   const handleEditSubmit = (updatedQuiz) => {
     onEdit(updatedQuiz);
@@ -22,6 +25,7 @@ const Quiz = ({ quiz, index, onEdit, onDelete, types }) => {
         <QuizEditForm
           quiz={quiz}
           types={types}
+          gameId={gameId}
           categoryId={quiz.categoryId}
           onSubmit={handleEditSubmit}
           onCancel={handleCancelEdit}

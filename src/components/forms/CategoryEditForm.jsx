@@ -9,6 +9,7 @@ const CategoryEditForm = ({ category, onSubmit, onCancel }) => {
     if (name.trim()) {
       onSubmit({
         id: category.id,
+        gameId: category.gameId,
         name,
       });
     }

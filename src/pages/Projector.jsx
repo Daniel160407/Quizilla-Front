@@ -6,6 +6,8 @@ import ProjectorQuestion from "../components/model/ProjectorQuestion";
 import Instructions from "./Instructions";
 import WebSocketManager from "../components/hooks/WebSocketManager";
 import Podium from "./Podium";
+import Cookies from "js-cookie";
+
 import {
   PLAYER_ANSWERED,
   PROJECTOR_ROLE,
@@ -35,6 +37,7 @@ const Projector = () => {
   const wsManager = useRef(null);
   const reconnectAttempts = useRef(0);
   const maxReconnectAttempts = 5;
+  const gameId = Cookies.get('gameId');
 
   useEffect(() => {
     const channel = new BroadcastChannel("quiz_channel");
@@ -93,8 +96,8 @@ const Projector = () => {
     try {
       setLoading(true);
       const [quizzesRes, categoriesRes] = await Promise.all([
-        useAxios.get("/quiz"),
-        useAxios.get("/category"),
+        useAxios.get(`/quiz?gameid=${gameId}`),
+        useAxios.get(`/category?gameid=${gameId}`),
       ]);
       setQuizzes(quizzesRes.data);
       setCategories(categoriesRes.data);

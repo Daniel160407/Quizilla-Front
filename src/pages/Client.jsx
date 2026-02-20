@@ -76,7 +76,6 @@ const Client = () => {
           payload: JSON.stringify(groupData),
         });
         console.log(groupData);
-
       };
 
       saveGroup();

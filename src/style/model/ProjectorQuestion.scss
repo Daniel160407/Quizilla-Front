@@ -235,9 +235,8 @@ $shadow-color: rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: center;
   align-items: center;
-  background: $kahoot-blue;
+  background: $kahoot-purple;
   z-index: 1000;
-  animation: fadeOut 0.5s 3s forwards;
 
   .question-intro-content {
     text-align: center;
@@ -251,7 +250,7 @@ $shadow-color: rgba(0, 0, 0, 0.2);
       text-shadow: 0 4px 8px rgba($black, 0.3);
       line-height: 1.2;
       margin: 0;
-      animation: pulse 1s infinite alternate;
+      animation: bounce 0.8s infinite alternate;
     }
   }
 }
